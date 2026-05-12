@@ -21,92 +21,81 @@ http://unibus.somee.com/
 
 UniBus is a smart transportation management system developed to improve university bus operations through intelligent routing, real-time GPS tracking, and dynamic trip management.
 
-The system minimizes unnecessary stops by dynamically optimizing routes based on active student pickup requests while providing live ETA updates and interactive tracking visualization.
+The system dynamically optimizes transportation routes based on active student pickup requests, reducing unnecessary stops and improving travel efficiency.
+
+UniBus provides:
+- Real-time bus tracking
+- Smart route optimization
+- Dynamic ETA calculation
+- Interactive map visualization
+- Live GPS synchronization
+- Student and driver management
+- Trip scheduling and monitoring
 
 ---
 
 # Key Features
 
-- Real-time bus tracking
-- Smart route optimization
-- Dynamic ETA calculation
-- Google Maps integration
-- Live GPS synchronization
-- Student and driver portals
-- Interactive route visualization
-- ASP.NET Core MVC layered architecture
-- SQL Server database integration
-- Live deployment
+## Student Features
+- View available trips
+- Book university transportation
+- Track buses live on Google Maps
+- View estimated arrival time (ETA)
+- Monitor trip status in real time
+- Manage personal bookings
 
 ---
 
-# System Screenshots
-
-## Student Home
-
-<p align="center">
-  <img src="images/student-home.png" width="320"/>
-</p>
-
----
-
-## Available Trips
-
-<p align="center">
-  <img src="images/available-trips.png" width="320"/>
-</p>
+## Driver Features
+- Start and end trips
+- Share live GPS location
+- Access optimized routes
+- Monitor passenger counts
+- View live tracking information
 
 ---
 
-## My Bookings
-
-<p align="center">
-  <img src="images/my-bookings.png" width="320"/>
-</p>
-
----
-
-## Live Student Tracking
-
-<p align="center">
-  <img src="images/student-live-tracking.png" width="320"/>
-</p>
+## Admin Features
+- Manage buses and routes
+- Assign drivers and students
+- Monitor active trips
+- Manage transportation schedules
+- Control transportation operations
 
 ---
 
-## Driver Live Tracking
+# Smart Route Optimization
 
-<p align="center">
-  <img src="images/driver-live-tracking.png" width="320"/>
-</p>
+UniBus uses shortest-path based optimization logic combined with Google Directions API to generate efficient transportation routes.
+
+The routing engine dynamically reorders stops based on active pickup requests to:
+- Reduce unnecessary stops
+- Minimize travel distance
+- Improve ETA accuracy
+- Optimize pickup sequencing
+
+Google Directions API is used to generate:
+- Real road paths
+- Accurate travel durations
+- Smooth route rendering
+- Dynamic route visualization
 
 ---
 
-## Driver Dashboard
+# Real-Time Tracking
 
-<p align="center">
-  <img src="images/driver-dashboard.png" width="320"/>
-</p>
+The tracking system provides:
+- Continuous GPS synchronization
+- Smooth live bus movement
+- Dynamic ETA updates
+- Interactive route rendering
+- Student-specific arrival estimation
 
----
-
-## Student Profile
-
-<p align="center">
-  <img src="images/student-profile.png" width="320"/>
-</p>
+The live tracking experience is inspired by modern ride-tracking systems.
 
 ---
 
 # System Architecture
-
-<p align="center">
-  <img src="images/system-architecture.png" width="900"/>
-</p>
-
----
-
-# Architecture Overview
 
 The system follows a layered architecture structure:
 
@@ -146,37 +135,6 @@ UniBus/
 ├── appsettings.json
 └── Program.cs
 ```
-
----
-
-# Smart Route Optimization
-
-UniBus uses shortest-path based optimization logic combined with Google Directions API to generate efficient transportation routes.
-
-The routing engine dynamically reorders stops based on active pickup requests to:
-- Reduce unnecessary stops
-- Minimize travel distance
-- Improve ETA accuracy
-- Optimize pickup sequencing
-
-Google Directions API is used to generate:
-- Real road paths
-- Accurate route durations
-- Smooth route polylines
-- Realistic route rendering
-
----
-
-# Real-Time Tracking
-
-The tracking system provides:
-- Continuous GPS synchronization
-- Smooth live bus movement
-- Dynamic ETA updates
-- Interactive route rendering
-- Student-specific arrival estimation
-
-The live tracking experience is inspired by modern ride-tracking systems.
 
 ---
 
