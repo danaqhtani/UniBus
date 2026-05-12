@@ -261,14 +261,6 @@ http://unibus.somee.com/
 
 ---
 
-# Author
-
-Dana Saeed Al-qahtani  
-Computer Science Student  
-Imam Mohammad Ibn Saud Islamic University
-
----
-
 # License
 
 This project was developed for educational and graduation project purposes.
