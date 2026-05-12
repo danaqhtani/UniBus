@@ -1,53 +1,179 @@
-# UniBus – Smart University Bus Coordination & Tracking System
+# 🚌 UniBus  
+### Smart University Bus Coordination & Live Tracking System
 
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-.NET%208-blue)
-![SQL Server](https://img.shields.io/badge/Database-SQL%20Server-red)
-![Google Maps API](https://img.shields.io/badge/API-Google%20Maps-green)
-![Status](https://img.shields.io/badge/Status-Active-success)
+<p align="center">
+  <img src="https://img.shields.io/badge/ASP.NET%20Core-.NET%208-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/SQL%20Server-Database-red?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Google%20Maps-API-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Status-Live-success?style=for-the-badge" />
+</p>
+
+---
 
 ## 🌐 Live Demo
 
-Published Website:  
+🔗 **Website:**  
 http://unibus.somee.com/
 
 ---
 
-# 📌 Overview
+# 🚀 Project Highlights
 
-UniBus is a smart university transportation system designed to improve transportation efficiency through:
+- Real-time university bus tracking system
+- Smart route optimization algorithm
+- Dynamic ETA calculation engine
+- Google Maps & Directions API integration
+- Smooth live GPS synchronization
+- Interactive map visualization
+- ASP.NET Core MVC layered architecture
+- SQL Server database integration
+- Real-world deployment on live hosting
 
-- Smart route optimization
+---
+
+# 📖 About The Project
+
+UniBus is a smart transportation management system designed to improve university bus operations through intelligent routing and real-time tracking.
+
+The system dynamically optimizes routes based on active student pickup requests, reducing unnecessary stops and improving transportation efficiency.
+
+UniBus provides:
 - Real-time bus tracking
+- Smart route optimization
 - ETA calculation
-- Dynamic stop handling
+- Interactive map visualization
 - Live driver location updates
-- Interactive Google Maps integration
+- Dynamic trip management
 
-The system minimizes unnecessary stops by dynamically optimizing routes based on active student pickup requests.
+---
+
+# 🖼️ System Preview
+
+## 🔐 Login Page
+
+<p align="center">
+  <img src="images/login.png" width="850"/>
+</p>
+
+---
+
+## 📍 Live Tracking System
+
+<p align="center">
+  <img src="images/live-tracking.png" width="850"/>
+</p>
+
+---
+
+## 🚌 Driver Tracking Interface
+
+<p align="center">
+  <img src="images/driver-tracking.png" width="850"/>
+</p>
+
+---
+
+## 🛠️ Admin Dashboard
+
+<p align="center">
+  <img src="images/admin-dashboard.png" width="850"/>
+</p>
+
+---
+
+# 🎥 Demo Preview
+
+<p align="center">
+  <img src="images/unibus-demo.gif" width="900"/>
+</p>
+
+---
+
+# 🏗️ System Architecture
+
+<p align="center">
+  <img src="images/system-architecture.png" width="950"/>
+</p>
+
+---
+
+## 🧠 Architecture Overview
+
+The project follows a layered architecture structure:
+
+```text
+Presentation Layer
+│
+├── Razor Views
+├── JavaScript Frontend
+│
+Business Logic Layer
+│
+├── Route Optimization Service
+├── Trip Tracking Service
+├── ETA Engine
+│
+Data Access Layer
+│
+├── Entity Framework Core
+│
+Database Layer
+│
+└── SQL Server
+```
 
 ---
 
 # ✨ Features
 
-## 👨‍🎓 Student Features
+## 👨‍🎓 Student Module
 - View assigned trips
-- Track bus location live on map
+- Track buses live on Google Maps
 - View estimated arrival time (ETA)
-- Monitor trip status in real time
-- Interactive route visualization
+- Receive real-time trip updates
+- Monitor route progress interactively
 
-## 🚌 Driver Features
+---
+
+## 🚌 Driver Module
 - Start and end trips
 - Share live GPS location
-- View optimized routes
-- Navigate using Google Maps integration
+- Access optimized route paths
+- Real-time navigation support
 
-## 🛠️ Admin Features
-- Manage buses
-- Manage students and drivers
-- Create and assign routes
+---
+
+## 🛠️ Admin Module
+- Manage buses and routes
+- Assign drivers and students
 - Monitor active trips
 - Control transportation operations
+- Manage trip scheduling
+
+---
+
+# 🧠 Smart Route Optimization
+
+UniBus uses shortest-path based optimization techniques combined with Google Directions API to generate efficient transportation routes.
+
+### Optimization Goals
+✔ Reduce unnecessary stops  
+✔ Minimize travel distance  
+✔ Improve ETA accuracy  
+✔ Optimize pickup sequencing  
+
+---
+
+# 📍 Real-Time Tracking System
+
+The live tracking system provides:
+- Continuous GPS synchronization
+- Smooth live bus movement
+- Dynamic ETA updates
+- Interactive route rendering
+- Student-specific arrival estimation
+
+Inspired by modern live delivery tracking systems.
 
 ---
 
@@ -62,7 +188,7 @@ The system minimizes unnecessary stops by dynamically optimizing routes based on
 ## Frontend
 - Razor Views
 - JavaScript
-- HTML/CSS
+- HTML5 / CSS3
 
 ## APIs & Services
 - Google Maps API
@@ -71,57 +197,9 @@ The system minimizes unnecessary stops by dynamically optimizing routes based on
 
 ---
 
-# 🏗️ System Architecture
+# 🗄️ Database Entities
 
-The system follows a layered architecture:
-
-- Presentation Layer (Razor Views + JavaScript)
-- Business Logic Layer (Services & Algorithms)
-- Data Access Layer (Entity Framework Core)
-- Database Layer (SQL Server)
-
-### Main Components
-- Route Optimization Service
-- Trip Tracking Service
-- Driver Tracking Module
-- Student Tracking Module
-- ETA Calculation Engine
-
----
-
-# 🧠 Smart Routing Algorithm
-
-UniBus uses a shortest-path based routing strategy combined with dynamic route optimization.
-
-The algorithm:
-- Optimizes pickup order
-- Removes unnecessary stops
-- Reduces travel distance
-- Improves ETA accuracy
-
-Google Directions API is used to generate:
-- Real road paths
-- Smooth route polylines
-- Accurate travel duration
-
----
-
-# 📍 Real-Time Tracking
-
-The system supports live bus tracking similar to modern delivery applications.
-
-Features include:
-- Continuous GPS updates
-- Smooth marker animation
-- Dynamic ETA refresh
-- Live route rendering
-- Student-specific arrival estimation
-
----
-
-# 🗄️ Database
-
-Main entities include:
+Main database tables include:
 - Students
 - Drivers
 - Buses
@@ -132,17 +210,17 @@ Main entities include:
 
 ---
 
-# ⚙️ Installation
+# ⚙️ Installation & Setup
 
-## Clone Repository
+## 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/your-username/UniBus.git
+git clone https://github.com/danaqhtani/UniBus.git
 ```
 
 ---
 
-## Configure Database
+## 2️⃣ Configure Database
 
 Update your connection string inside:
 
@@ -160,7 +238,7 @@ Example:
 
 ---
 
-## Run Migrations
+## 3️⃣ Run Database Migration
 
 ```bash
 Update-Database
@@ -168,7 +246,7 @@ Update-Database
 
 ---
 
-## Run Project
+## 4️⃣ Run Application
 
 ```bash
 dotnet run
@@ -176,15 +254,15 @@ dotnet run
 
 ---
 
-# 🗺️ Google Maps Setup
+# 🗺️ Google Maps Configuration
 
-Add your Google Maps API key inside:
+Add your API key inside:
 
 ```html
 <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
 ```
 
-Required APIs:
+### Required APIs
 - Maps JavaScript API
 - Directions API
 - Geolocation API
@@ -195,9 +273,9 @@ Required APIs:
 
 UniBus is deployed using:
 - Somee Hosting
-- SQL Server Database Hosting
+- SQL Server Hosting
 
-### Live Website
+### 🔗 Live Deployment
 http://unibus.somee.com/
 
 ---
@@ -206,25 +284,25 @@ http://unibus.somee.com/
 
 - Push notifications
 - AI-based traffic prediction
-- Driver mobile application
-- Attendance integration
-- Multi-university support
+- Mobile application support
+- Attendance system integration
+- Multi-university scalability
 
 ---
 
 # 🎯 Project Goals
 
-- Improve transportation efficiency
-- Reduce unnecessary travel
-- Enhance student experience
-- Provide real-time visibility
-- Optimize university transportation management
+- Improve university transportation efficiency
+- Enhance student transportation experience
+- Reduce unnecessary route delays
+- Provide accurate real-time tracking
+- Build a scalable smart transport solution
 
 ---
 
 # 👩‍💻 Author
 
-### Dana Saeed Al-qahtani
+### Dana Saeed Al-qahtani  
 Computer Science Student  
 Imam Mohammad Ibn Saud Islamic University
 
@@ -232,4 +310,4 @@ Imam Mohammad Ibn Saud Islamic University
 
 # 📄 License
 
-This project is for educational and graduation project purposes.
+This project was developed for educational and graduation project purposes.
