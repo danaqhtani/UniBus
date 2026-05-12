@@ -1,0 +1,170 @@
+﻿@{
+    ViewBag.Title = "Driver Home";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driver Home - UniBus</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        driverPrimary: "#5f7f69",
+                        driverSoft: "#e8f1ea",
+                        driverBg: "#f6f8f5",
+                        driverCard: "#ffffff",
+                        driverText: "#1f2a23",
+                        driverMuted: "#6d786f",
+                        driverDanger: "#d68f8f"
+                    },
+                    fontFamily: {
+                        sans: ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-driverBg font-sans text-driverText">
+
+    <!-- ===========================================================
+         MOCK DRIVER TRIPS
+         Frontend only for now.
+
+         REAL BACKEND LATER:
+         Trips should come from Trip / DriverTrip table
+         filtered by logged-in driver.
+    ============================================================ -->
+    <script>
+        const driverInfo = {
+            name: "Captain Saad",
+            serialNumber: "DRV-2026-001",
+            plateNumber: "RUA-4821"
+        };
+
+        const todayTrips = [
+            { tripId: "TR-1001", time: "9:00 AM", passengers: "8/25", route: "University → Metro Station" },
+            { tripId: "TR-1002", time: "9:30 AM", passengers: "14/25", route: "Metro Station → University" },
+            { tripId: "TR-1003", time: "10:15 AM", passengers: "17/25", route: "University → Metro Station" },
+            { tripId: "TR-1004", time: "11:00 AM", passengers: "11/25", route: "Metro Station → University" },
+            { tripId: "TR-1005", time: "11:45 AM", passengers: "19/25", route: "University → Metro Station" }
+        ];
+
+        /*
+        REAL DATABASE LATER:
+
+        todayTrips = dataFromBackend.map(item => ({
+            tripId: item.trip_id,
+            time: item.trip_time,
+            passengers: item.passengers_count + "/" + item.capacity,
+            route: item.route_name
+        }));
+        */
+    </script>
+
+    <header class="fixed top-0 left-0 w-full z-50 bg-white/85 backdrop-blur-xl border-b border-gray-100">
+        <div class="h-16 px-4 sm:px-6 max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl font-extrabold text-driverPrimary">UniBus</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex flex-col items-end">
+                    <span class="text-sm font-bold">@Session["DriverName"]</span>
+                    <span class="text-xs text-driverMuted">@Session["DriverSerialNumber"]</span>
+                </div>
+
+                <a href="/Driver/Logout"
+                   class="px-4 py-2 rounded-2xl bg-red-50 text-red-700 text-sm font-bold hover:bg-red-100 transition">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-24 pb-28 px-4 sm:px-6 max-w-5xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-4xl font-extrabold mb-2">Today’s trip</h1>
+            <p class="text-driverMuted">View your scheduled trips and open live map tracking.</p>
+        </header>
+
+        <section class="space-y-4" id="driverTripsList"></section>
+
+        @*
+            REAL BACKEND LATER:
+            This page should load driver trips from database based on logged-in driver session.
+            Possible tables:
+            - Driver
+            - Trip
+            - Booking
+            - Vehicle
+        *@
+    </main>
+
+    <nav class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-100 z-50">
+        <div class="h-16 flex items-center justify-around">
+            <a href="/Driver/Home" class="flex flex-col items-center text-driverPrimary text-xs font-semibold">
+                <span class="material-symbols-outlined">home</span>
+                Home
+            </a>
+
+            <a href="/Driver/Profile" class="flex flex-col items-center text-driverMuted text-xs font-semibold">
+                <span class="material-symbols-outlined">person</span>
+                Profile
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        const driverTripsList = document.getElementById("driverTripsList");
+
+        function buildTripCard(trip) {
+            return `
+                <div class="bg-white rounded-3xl overflow-hidden shadow-[0_18px_40px_rgba(0,0,0,0.06)] border border-[#e6ece5]">
+                    <div class="px-5 py-4 bg-[#dfe7df]">
+                        <h3 class="text-xl font-bold text-driverText">${trip.route}</h3>
+                        <p class="text-sm text-driverMuted mt-1">Trip ID: ${trip.tripId}</p>
+                    </div>
+
+                    <div class="p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-driverMuted font-bold mb-1">Time</p>
+                            <p class="text-lg font-bold">${trip.time}</p>
+                        </div>
+
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-driverMuted font-bold mb-1">Passengers</p>
+                            <p class="text-lg font-bold">${trip.passengers}</p>
+                        </div>
+
+                        <div class="flex sm:justify-end">
+                            <a href="/Driver/Track?tripId=${trip.tripId}"
+                               class="inline-flex items-center justify-center rounded-2xl bg-driverSoft text-driverPrimary px-5 py-3 font-bold hover:bg-[#dbe8dd] transition min-w-[110px]">
+                                View
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        driverTripsList.innerHTML = todayTrips.map(buildTripCard).join("");
+    </script>
+</body>
+</html>

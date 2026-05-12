@@ -1,0 +1,151 @@
+﻿@{
+    ViewBag.Title = "Driver Profile";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driver Profile - UniBus</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        driverPrimary: "#5f7f69",
+                        driverSoft: "#e8f1ea",
+                        driverBg: "#f6f8f5",
+                        driverText: "#1f2a23",
+                        driverMuted: "#6d786f"
+                    },
+                    fontFamily: {
+                        sans: ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-driverBg font-sans text-driverText">
+
+    <!-- ===========================================================
+         MOCK DRIVER PROFILE
+         Frontend only for now
+
+         REAL BACKEND LATER:
+         Load from Driver / Vehicle tables
+    ============================================================ -->
+    <script>
+        const driverProfile = {
+            fullName: "Captain Saad",
+            serialNumber: "DRV-2026-001",
+            plateNumber: "RUA-4821"
+        };
+
+        /*
+        REAL DATABASE LATER:
+        driverProfile = {
+            fullName: data.driver_name,
+            serialNumber: data.serial_number,
+            plateNumber: data.plate_number
+        };
+        */
+    </script>
+
+    <header class="fixed top-0 left-0 w-full z-50 bg-white/85 backdrop-blur-xl border-b border-gray-100">
+        <div class="h-16 px-4 sm:px-6 max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="/Driver/Home" class="w-10 h-10 rounded-full hover:bg-[#edf3ed] flex items-center justify-center">
+                </a>
+                <span class="text-2xl font-extrabold text-driverPrimary">UniBus</span>
+            </div>
+
+            <a href="/Driver/Logout"
+               class="px-4 py-2 rounded-2xl bg-red-50 text-red-700 text-sm font-bold hover:bg-red-100 transition">
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <main class="pt-24 pb-28 px-4 sm:px-6 max-w-4xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-4xl font-extrabold mb-2">Profile</h1>
+            <p class="text-driverMuted">Driver account information</p>
+        </header>
+
+        <section class="bg-white rounded-[30px] p-6 md:p-8 shadow-[0_24px_50px_rgba(0,0,0,0.06)] border border-[#e5ece5]">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+                <div class="w-20 h-20 rounded-full bg-driverSoft text-driverPrimary font-extrabold text-2xl flex items-center justify-center">
+                    D
+                </div>
+
+                <div>
+                    <p class="text-xs uppercase tracking-widest text-driverMuted font-bold mb-2">Driver Profile</p>
+                    <h2 id="driverFullName" class="text-3xl font-extrabold">Captain Saad</h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-8">
+                <div class="bg-[#f6f8f5] rounded-2xl p-5">
+                    <p class="text-[10px] uppercase tracking-widest text-driverMuted font-bold mb-2">Full Name</p>
+                    <p id="profileName" class="text-lg font-bold">Captain Saad</p>
+                </div>
+
+                <div class="bg-[#f6f8f5] rounded-2xl p-5">
+                    <p class="text-[10px] uppercase tracking-widest text-driverMuted font-bold mb-2">Serial Number</p>
+                    <p id="profileSerial" class="text-lg font-bold">DRV-2026-001</p>
+                </div>
+
+                <div class="bg-[#f6f8f5] rounded-2xl p-5 md:col-span-2">
+                    <p class="text-[10px] uppercase tracking-widest text-driverMuted font-bold mb-2">Car Plate Number</p>
+                    <p id="profilePlate" class="text-lg font-bold">RUA-4821</p>
+                </div>
+            </div>
+        </section>
+
+        @*
+            REAL BACKEND LATER:
+            Profile data should be loaded from database using the logged-in driver session.
+
+            Suggested fields:
+            - driver_name
+            - serial_number
+            - plate_number
+        *@
+    </main>
+
+    <nav class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-100 z-50">
+        <div class="h-16 flex items-center justify-around">
+            <a href="/Driver/Home" class="flex flex-col items-center text-driverMuted text-xs font-semibold">
+                <span class="material-symbols-outlined">home</span>
+                Home
+            </a>
+
+            <a href="/Driver/Profile" class="flex flex-col items-center text-driverPrimary text-xs font-semibold">
+                <span class="material-symbols-outlined">person</span>
+                Profile
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        document.getElementById("driverFullName").textContent = driverProfile.fullName;
+        document.getElementById("profileName").textContent = driverProfile.fullName;
+        document.getElementById("profileSerial").textContent = driverProfile.serialNumber;
+        document.getElementById("profilePlate").textContent = driverProfile.plateNumber;
+    </script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+﻿@model UniBus.Models.HomeViewModel
+
+@{
+                ViewBag.Title = "Home";
+
+                Layout = null;
+
+}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>UniBus Home</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+
+        tailwind.config = {
+
+            darkMode: "class",
+
+            theme: {
+
+                extend: {
+
+                    colors: {
+
+                        primary: "#6c45af",
+
+                        primaryContainer: "#b78efe",
+
+                        secondary: "#b40953",
+
+                        secondaryContainer: "#ffc2ce",
+
+                        background: "#f6f6f8",
+
+                        surface: "#ffffff",
+
+                        surfaceLow: "#f0f1f3",
+
+                        surfaceHigh: "#e1e2e5",
+
+                        surfaceVariant: "#dbdde0",
+
+                        textMain: "#2d2f31",
+
+                        textMuted: "#5a5c5d",
+
+                        outline: "#757779",
+
+                        outlineVariant: "#acadaf"
+
+                    },
+
+                    fontFamily: {
+
+                        headline: ["Manrope", "sans-serif"],
+
+                        body: ["Manrope", "sans-serif"],
+
+                        label: ["Plus Jakarta Sans", "sans-serif"]
+
+                    },
+
+                    borderRadius: {
+
+                        xl: "1.5rem",
+
+                        full: "9999px"
+
+                    }
+
+                }
+
+            }
+
+        }
+    </script>
+    <style>
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .primary-gradient {
+            background: linear-gradient(135deg, #6c45af 0%, #b78efe 100%);
+        }
+
+        body {
+            background-color: #f6f6f8;
+            color: #2d2f31;
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-purple-200 selection:text-slate-900">
+    <!-- Top Nav -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-[0_12px_24px_rgba(108,69,175,0.08)]">
+        <div class="flex justify-between items-center px-6 h-16 w-full max-w-7xl mx-auto">
+            <a href="/Home/Index" class="text-2xl font-black text-violet-700 font-headline tracking-tight">
+
+
+                UniBus
+            </a>
+            <img src="@Url.Content("~/Content/images/register-side.jpg")"
+                 alt="logo"
+                 class="h-11 w-15 rounded-full object-cover border-2 border-violet-100 shadow-sm" />
+
+             <div class="flex items-center gap-3">
+
+                <!-- Logout button -->
+
+                <div class="hidden sm:flex flex-col items-end">
+                    <span class="text-sm font-bold text-slate-800">@Model.StudentName</span>
+                    <span class="text-xs text-slate-500">@Model.StudentEmail</span>
+                </div>
+
+                <div class="h-10 w-10 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-bold">
+                    @(string.IsNullOrWhiteSpace(Model.StudentName) ? "U" : Model.StudentName.Substring(0, 1).ToUpper())
+                </div>
+
+
+            </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    </nav>
+    <main class="pt-24 pb-32 px-6 max-w-7xl mx-auto">
+
+        @if (ViewBag.ErrorMessage != null)
+
+        {
+<div class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+
+    @ViewBag.ErrorMessage
+</div>
+            }
+        <!-- Welcome -->
+        <header class="mb-10">
+            <h1 class="text-4xl font-extrabold font-headline tracking-tight mb-2">
+
+                Good morning, @Model.StudentName.
+            </h1>
+            <p class="text-textMuted font-medium">
+
+                Campus: @Model.CampusLabel · Phone: @Model.PhoneNumber
+            </p>
+        </header>
+        <!-- Student Summary -->
+        <section class="mb-12">
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-[0_12px_24px_rgba(108,69,175,0.08)] border border-slate-200/60">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div>
+                        <p class="text-xs font-bold font-label uppercase tracking-widest text-slate-500 mb-2">
+
+                            Student Summary
+                        </p>
+                        <h2 class="text-2xl font-bold font-headline text-slate-900">@Model.StudentName</h2>
+                        <p class="text-slate-500 mt-1">@Model.StudentEmail</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full md:w-auto">
+                        <div class="bg-slate-50 rounded-2xl px-4 py-3">
+                            <p class="text-[10px] uppercase tracking-widest font-bold text-slate-500 mb-1">Student ID</p>
+                            <p class="font-bold text-slate-900">@Model.StudentId</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-2xl px-4 py-3">
+                            <p class="text-[10px] uppercase tracking-widest font-bold text-slate-500 mb-1">Campus</p>
+                            <p class="font-bold text-slate-900">@Model.CampusLabel</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Available Routes -->
+        <section class="mb-12">
+            <h2 class="text-sm font-bold font-label uppercase tracking-widest text-slate-500 mb-6 ml-1">
+
+                Available Routes
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                @foreach (var route in Model.AvailableRoutes)
+
+                {
+    <div class="bg-white rounded-xl p-8 flex flex-col justify-between min-h-[220px] transition-all hover:translate-y-[-4px] shadow-[0_12px_24px_rgba(108,69,175,0.06)]">
+        <div>
+            <div class="flex items-center gap-2 mb-4">
+                <span class="material-symbols-outlined @route.AccentColorClass">@route.IconName</span>
+                <span class="text-xs font-bold font-label uppercase tracking-tighter @route.AccentColorClass">
+
+                    @route.RouteCode
+                </span>
+            </div>
+            <h3 class="text-2xl font-bold font-headline text-slate-900 leading-tight">
+
+                @route.RouteTitle
+            </h3>
+            <p class="text-slate-500 mt-3 text-sm">
+
+                @route.RouteSubtitle
+            </p>
+        </div>
+        <div class="flex justify-between items-end mt-6 gap-4">
+            <div>
+                <p class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-1">Direction</p>
+                <p class="font-bold text-slate-900">@route.RouteDirection</p>
+                <p class="text-sm text-slate-500 mt-1">@route.RidersCount riders today</p>
+            </div>
+            <!-- FIXED: route button now opens Trips page -->
+            <a href="/Trips/Index"
+               class="bg-slate-100 text-violet-700 font-bold font-label px-5 py-2.5 rounded-full text-sm hover:bg-violet-100 transition-colors">
+
+                View Times
+            </a>
+        </div>
+    </div>
+                }
+            </div>
+        </section>
+        <!-- Current Booking -->
+        <section>
+            <div class="flex items-center justify-between mb-6 px-1">
+                <h2 class="text-sm font-bold font-label uppercase tracking-widest text-slate-500">
+
+                    Current Booking
+                </h2>
+
+                @if (Model.CurrentBooking != null && Model.CurrentBooking.HasBooking)
+
+                {
+    <div class="flex items-center gap-2 bg-pink-50 px-3 py-1 rounded-full">
+        <span class="w-2 h-2 rounded-full bg-pink-600 animate-pulse"></span>
+        <span class="text-[10px] font-bold font-label text-pink-700 uppercase">Live Update</span>
+    </div>
+                }
+            </div>
+
+            @if (Model.CurrentBooking != null && Model.CurrentBooking.HasBooking)
+
+            {
+<div class="bg-white rounded-xl p-6 md:p-8 shadow-[0_12px_24px_rgba(108,69,175,0.08)] border border-slate-200/60">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+        <!-- Trip Info -->
+        <div class="flex-1">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-violet-100 p-3 rounded-2xl">
+                    <span class="material-symbols-outlined text-violet-700 text-3xl">directions_bus</span>
+                </div>
+                <div>
+                    <span class="text-xs font-bold font-label text-slate-500 uppercase">
+
+                        Trip #@Model.CurrentBooking.TripCode
+                    </span>
+                    <h4 class="text-xl font-bold font-headline text-slate-900">
+
+                        @Model.CurrentBooking.RouteName
+                    </h4>
+                </div>
+            </div>
+            <div class="relative flex items-center gap-8 py-2">
+                <div class="flex flex-col items-center gap-1">
+                    <div class="w-3 h-3 rounded-full bg-violet-600"></div>
+                    <div class="w-1 h-12 bg-slate-300 rounded-full"></div>
+                    <div class="w-3 h-3 rounded-full border-2 border-slate-400"></div>
+                </div>
+                <div class="flex flex-col justify-between h-20">
+                    <div>
+                        <p class="text-sm font-bold font-headline leading-none">@Model.CurrentBooking.StartPoint</p>
+                        <p class="text-xs font-label text-slate-500">Departure @Model.CurrentBooking.DepartureTime</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold font-headline leading-none">@Model.CurrentBooking.EndPoint</p>
+                        <p class="text-xs font-label text-slate-500">Estimated @Model.CurrentBooking.EstimatedArrival</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row lg:flex-col gap-3 lg:min-w-[200px]">
+            <a href="/Trips/Track"
+               class="primary-gradient text-white font-bold font-label py-4 px-8 rounded-xl shadow-lg shadow-violet-200 active:scale-95 transition-transform flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">near_me</span>
+
+                Track Trip
+            </a>
+            <a href="#"
+               class="text-pink-700 font-bold font-label py-4 px-8 rounded-xl hover:bg-pink-50 transition-colors active:scale-95 text-center">
+
+                Cancel Booking
+            </a>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div class="mt-8 pt-8 border-t border-slate-200 flex flex-wrap gap-6 items-center justify-between">
+        <div>
+            <p class="text-[10px] font-bold font-label text-slate-500 uppercase leading-none mb-1">
+
+                Your Driver
+            </p>
+            <p class="text-sm font-bold font-headline">@Model.CurrentBooking.DriverName</p>
+        </div>
+        <div class="flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-xl">
+            <span class="material-symbols-outlined text-violet-700">confirmation_number</span>
+            <span class="text-sm font-bold font-headline">Seat @Model.CurrentBooking.SeatNumber</span>
+        </div>
+    </div>
+</div>
+            }
+
+            else
+
+            {
+<div class="bg-white rounded-xl p-8 border border-slate-200/60 shadow-[0_12px_24px_rgba(108,69,175,0.05)] text-center">
+    <div class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-violet-100 text-violet-700 mb-4">
+        <span class="material-symbols-outlined">event_seat</span>
+    </div>
+    <h3 class="text-xl font-bold font-headline text-slate-900 mb-2">No current booking</h3>
+    <p class="text-slate-500">You do not have an active trip right now.</p>
+</div>
+            }
+        </section>
+    </main>
+    <!-- Bottom Nav -->
+    <nav class="fixed bottom-0 left-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-[0_-8px_20px_rgba(108,69,175,0.05)] rounded-t-3xl">
+        <div class="flex justify-around items-center px-4 pb-6 pt-3">
+            <!-- ACTIVE HOME -->
+            <a href="/Home/Index"
+               class="flex flex-col items-center justify-center bg-violet-100 text-violet-800 rounded-2xl px-5 py-2 active:scale-95 transition-transform">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+                <span class="font-body text-[11px] uppercase tracking-wider font-semibold mt-1">Home</span>
+            </a>
+            <!-- FIXED: Trips is now clickable -->
+            <a href="/Trips/Index"
+               class="flex flex-col items-center justify-center text-slate-400 hover:text-violet-700 px-5 py-2 active:scale-95 transition-transform">
+                <span class="material-symbols-outlined">directions_bus</span>
+                <span class="font-body text-[11px] uppercase tracking-wider font-semibold mt-1">Trips</span>
+            </a>
+            <!-- FIXED: Profile is now clickable -->
+            <a href="/Profile/Index"
+               class="flex flex-col items-center justify-center text-slate-400 hover:text-violet-700 px-5 py-2 active:scale-95 transition-transform">
+                <span class="material-symbols-outlined">person</span>
+                <span class="font-body text-[11px] uppercase tracking-wider font-semibold mt-1">Profile</span>
+            </a>
+        </div>
+    </nav>
+</body>
+</html>

@@ -1,0 +1,308 @@
+﻿@{
+    ViewBag.Title = "Driver Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic page setup -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driver Login - UniBus</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+
+    <script>
+        // Tailwind custom theme for driver pages
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        driverPrimary: "#5f7f69",
+                        driverSoft: "#e8f1ea",
+                        driverBg: "#f6f8f5",
+                        driverCard: "#ffffff",
+                        driverText: "#1f2a23",
+                        driverMuted: "#6d786f",
+                        driverAccent: "#b7c4b8"
+                    },
+                    fontFamily: {
+                        sans: ["inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Material icon settings */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-driverBg font-sans text-driverText">
+
+    <!-- ===========================================================
+         MAIN PAGE WRAPPER
+         Responsive layout:
+         - Desktop: 2 columns
+         - Mobile: 1 column
+    ============================================================ -->
+    <div class="min-h-screen flex items-center justify-center px-4 py-8">
+        <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 bg-white rounded-[32px] overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.08)]">
+
+            <!-- ===================================================
+                 LEFT VISUAL SECTION
+                 Desktop only
+            ==================================================== -->
+            <div class="hidden lg:flex relative bg-gradient-to-br from-[#cfd9cf] via-[#e7eee6] to-[#bfcdbf] p-10 overflow-hidden">
+
+                <!-- Decorative blurred circles -->
+                <div class="absolute top-0 left-0 w-40 h-40 bg-white/30 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 right-0 w-56 h-56 bg-[#8aa08d]/20 rounded-full blur-3xl"></div>
+
+                <div class="relative z-10 flex flex-col justify-between w-full">
+
+                    <!-- Top branding area -->
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-white/70 text-driverPrimary flex items-center justify-center shadow-md mb-6">
+                            <span class="material-symbols-outlined text-3xl">directions_bus</span>
+                        </div>
+
+                        <h1 class="text-5xl font-extrabold text-driverText">UniBus</h1>
+
+                        <p class="mt-4 text-driverMuted max-w-md leading-7">
+                            Driver portal for daily trip management, live route view, and trip control.
+                        </p>
+                    </div>
+
+                    <!-- Bottom information card -->
+                    <div class="bg-white/70 backdrop-blur rounded-3xl p-6 border border-white/60">
+                        <p class="text-sm uppercase tracking-[0.2em] text-driverMuted mb-2">
+                            Driver Access
+                        </p>
+
+                        <h3 class="text-2xl font-bold text-driverText mb-2">
+                            Sign in with serial number
+                        </h3>
+
+                        <p class="text-sm text-driverMuted leading-6">
+                            Enter your assigned serial number to view trips and start live tracking.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================================================
+                 RIGHT FORM SECTION
+            ==================================================== -->
+            <div class="p-6 sm:p-8 lg:p-12 flex items-center">
+                <div class="w-full max-w-md mx-auto">
+
+                    <!-- Mobile brand header -->
+                    <div class="lg:hidden text-center mb-8">
+                        <div class="w-16 h-16 rounded-2xl bg-driverSoft text-driverPrimary flex items-center justify-center mx-auto mb-4">
+                            <span class="material-symbols-outlined text-3xl">directions_bus</span>
+                        </div>
+
+                        <h1 class="text-4xl font-extrabold">UniBus</h1>
+                    </div>
+
+                    <!-- Page heading -->
+                    <p class="text-sm uppercase tracking-[0.18em] text-driverPrimary mb-3 font-semibold">
+                        Driver Access
+                    </p>
+
+                    <h2 class="text-3xl sm:text-4xl font-extrabold mb-2">
+                        Hello again
+                    </h2>
+
+                    <p class="text-driverMuted text-sm sm:text-base mb-8">
+                        Enter your serial number to continue
+                    </p>
+
+                    <!-- Error message from backend -->
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+                    <!-- ===================================================
+                         DRIVER LOGIN FORM
+                         Frontend currently sends serial number to controller
+                    ==================================================== -->
+                    <form id="driverLoginForm" method="post" action="/Driver/Login" class="space-y-5">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Serial number field -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Serial Number
+                            </label>
+
+                            <input id="serialInput"
+                                   name="serialNumber"
+                                   type="text"
+                                   placeholder="Enter your serial number"
+                                   class="w-full h-14 rounded-2xl border border-[#d7e0d8] px-4 text-sm bg-white outline-none focus:ring-4 focus:ring-[#dce9de] focus:border-[#8fa591] transition" />
+
+                            <!-- Frontend validation error -->
+                            <p id="serialError" class="mt-2 text-sm text-red-600"></p>
+                        </div>
+
+                        <!-- Submit button -->
+                        <button id="loginBtn"
+                                type="submit"
+                                class="w-full h-14 rounded-2xl bg-driverPrimary text-white font-bold text-base hover:opacity-95 active:scale-[0.99] transition shadow-[0_14px_28px_rgba(95,127,105,0.18)]">
+                            Sign in
+                        </button>
+                    </form>
+
+                    <!-- Mock login helper -->
+                    <div class="mt-8 rounded-2xl bg-driverSoft px-4 py-4">
+                        <p class="text-xs font-bold uppercase tracking-widest text-driverMuted mb-1">
+                            Mock serial
+                        </p>
+                        <p class="text-sm text-driverText font-semibold">
+                            DRV-2026-001
+                        </p>
+                    </div>
+
+                    @*
+                        =========================================================
+                        REAL BACKEND LATER
+                        =========================================================
+
+                        This page currently uses frontend validation only,
+                        but the real login should be checked in DriverController.
+
+                        Example backend logic:
+
+                        [HttpPost]
+                        [ValidateAntiForgeryToken]
+                        public ActionResult Login(string serialNumber)
+                        {
+                            if (string.IsNullOrWhiteSpace(serialNumber))
+                            {
+                                ViewBag.ErrorMessage = "Serial number is required.";
+                                return View();
+                            }
+
+                            using (SqlConnection connection = new SqlConnection(connectionString))
+                            {
+                                connection.Open();
+
+                                string query = @"
+                                    SELECT driver_id, driver_name, serial_number, plate_number
+                                    FROM dbo.Driver
+                                    WHERE serial_number = @SerialNumber";
+
+                                using (SqlCommand command = new SqlCommand(query, connection))
+                                {
+                                    command.Parameters.AddWithValue("@SerialNumber", serialNumber);
+
+                                    using (SqlDataReader reader = command.ExecuteReader())
+                                    {
+                                        if (reader.Read())
+                                        {
+                                            Session["DriverId"] = reader["driver_id"];
+                                            Session["DriverName"] = reader["driver_name"].ToString();
+                                            Session["DriverSerialNumber"] = reader["serial_number"].ToString();
+                                            Session["DriverPlateNumber"] = reader["plate_number"].ToString();
+
+                                            return RedirectToAction("Home");
+                                        }
+                                    }
+                                }
+                            }
+
+                            ViewBag.ErrorMessage = "Invalid serial number.";
+                            return View();
+                        }
+
+                        Expected database fields:
+                        - driver_id
+                        - driver_name
+                        - serial_number
+                        - plate_number
+                        =========================================================
+                    *@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===========================================================
+        // FRONTEND VALIDATION
+        // This is only for UI help before sending form to backend
+        // ===========================================================
+
+        // Form elements
+        const driverLoginForm = document.getElementById("driverLoginForm");
+        const serialInput = document.getElementById("serialInput");
+        const serialError = document.getElementById("serialError");
+        const loginBtn = document.getElementById("loginBtn");
+
+        // Validate serial number input
+        function validateSerial(value) {
+            if (!value.trim()) {
+                return "Serial number is required";
+            }
+            return "";
+        }
+
+        // Handle form submit
+        driverLoginForm.addEventListener("submit", function (e) {
+            // Reset old error
+            serialError.textContent = "";
+
+            // Validate field
+            const serialMessage = validateSerial(serialInput.value);
+
+            // Stop form submit if invalid
+            if (serialMessage) {
+                e.preventDefault();
+                serialError.textContent = serialMessage;
+                return;
+            }
+
+            // Loading state for button
+            loginBtn.disabled = true;
+            loginBtn.textContent = "Signing in...";
+        });
+
+        /*
+        ===========================================================
+        REAL FRONTEND/BACKEND FLOW LATER
+        ===========================================================
+
+        Right now:
+        - form posts directly to /Driver/Login
+
+        Later if you want AJAX:
+        - send serial number using fetch()
+        - check response from backend
+        - redirect to /Driver/Home if success
+
+        Example pseudo flow:
+        fetch('/Driver/Login', {
+            method: 'POST',
+            body: ...
+        })
+        ===========================================================
+        */
+    </script>
+</body>
+</html>

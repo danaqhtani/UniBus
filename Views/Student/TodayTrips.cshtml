@@ -1,0 +1,285 @@
+﻿@model List<UniBusApp.Models.ShuttleTrip>
+
+@{
+    ViewData["Title"] = "Today Trips";
+    var direction = ViewBag.Direction != null ? (int)ViewBag.Direction : 1;
+}
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#6c45af",
+                    primaryContainer: "#b78efe",
+                    secondary: "#b40953",
+                    secondaryContainer: "#ffc2ce",
+                    background: "#f6f6f8",
+                    surface: "#ffffff",
+                    surfaceLow: "#f0f1f3",
+                    surfaceHigh: "#e1e2e5",
+                    textMain: "#2d2f31",
+                    textMuted: "#5a5c5d",
+                    outline: "#757779",
+                    outlineVariant: "#acadaf"
+                },
+                borderRadius: {
+                    xl: "1.5rem",
+                    full: "9999px"
+                },
+                fontFamily: {
+                    headline: ["Manrope", "sans-serif"],
+                    body: ["Manrope", "sans-serif"],
+                    label: ["Plus Jakarta Sans", "sans-serif"]
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+
+    .primary-gradient {
+        background: linear-gradient(135deg, #6c45af 0%, #b78efe 100%);
+    }
+
+    body {
+        background-color: #f6f6f8;
+        color: #2d2f31;
+    }
+
+    .bottom-nav-shadow {
+        box-shadow: 0 -8px 24px rgba(108,69,175,0.08);
+    }
+
+    .status-scheduled {
+        background-color: #f5f3ff;
+        color: #6d28d9;
+    }
+
+    .status-started {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+    }
+
+    .status-completed {
+        background-color: #ecfdf5;
+        color: #047857;
+    }
+</style>
+
+@functions {
+    public string GetStatusClass(string? status)
+    {
+        var value = (status ?? "").Trim().ToLower();
+
+        if (value.Contains("start"))
+            return "status-started";
+
+        if (value.Contains("complete"))
+            return "status-completed";
+
+        return "status-scheduled";
+    }
+}
+
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-[0_12px_24px_rgba(108,69,175,0.08)]">
+    <div class="flex justify-between items-center px-6 h-16 w-full max-w-7xl mx-auto">
+        <div class="flex items-center gap-4">
+            <a asp-controller="Student" asp-action="TodayTrips" class="text-2xl font-black text-violet-700 font-headline tracking-tight">
+                UniBus
+            </a>
+        </div>
+
+        <a asp-controller="Student" asp-action="Profile" class="p-2 rounded-full hover:bg-violet-50 transition-colors cursor-pointer">
+            <span class="material-symbols-outlined text-slate-500">person</span>
+        </a>
+    </div>
+</nav>
+
+<main class="pt-24 pb-32 px-6 max-w-7xl mx-auto">
+    @if (TempData["Success"] != null)
+    {
+        <div class="mb-4 rounded-xl bg-green-50 text-green-700 px-4 py-3 font-medium">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="mb-4 rounded-xl bg-red-50 text-red-700 px-4 py-3 font-medium">
+            @TempData["Error"]
+        </div>
+    }
+
+    <section class="mb-10">
+        <div class="bg-white rounded-xl p-6 md:p-8 shadow-[0_12px_24px_rgba(108,69,175,0.08)] border border-slate-200/60">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <p class="text-xs font-bold font-label uppercase tracking-widest text-violet-600 mb-3">
+                        Welcome Back
+                    </p>
+                    <h1 class="text-4xl font-extrabold font-headline tracking-tight text-slate-900 mb-2">
+                        Available Routes
+                    </h1>
+                    <p class="text-slate-500 font-medium">
+                        Choose your shuttle for today and view the available seats.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-2 bg-violet-50 px-4 py-3 rounded-2xl">
+                    <span class="material-symbols-outlined text-violet-700">route</span>
+                    <span class="text-sm font-bold text-violet-700">
+                        @(Model?.Count ?? 0) Trip@(Model != null && Model.Count == 1 ? "" : "s")
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-8">
+        <div class="flex flex-wrap gap-3">
+            <a asp-action="TodayTrips"
+               asp-route-direction="1"
+               class="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition @(direction == 1 ? "bg-violet-600 text-white shadow-lg shadow-violet-200" : "bg-white text-slate-700 border border-slate-200 hover:bg-violet-50")">
+                Metro → University
+            </a>
+
+            <a asp-action="TodayTrips"
+               asp-route-direction="2"
+               class="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition @(direction == 2 ? "bg-violet-600 text-white shadow-lg shadow-violet-200" : "bg-white text-slate-700 border border-slate-200 hover:bg-violet-50")">
+                University → Metro
+            </a>
+        </div>
+    </section>
+
+    <section>
+        <div class="flex items-center justify-between mb-6 px-1">
+            <h2 class="text-sm font-bold font-label uppercase tracking-widest text-slate-500">
+                Available Trips Today
+            </h2>
+
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                @(Model?.Count ?? 0) Available
+            </div>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="bg-white rounded-xl p-8 border border-slate-200/60 shadow-[0_12px_24px_rgba(108,69,175,0.05)] text-center">
+                <div class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-violet-100 text-violet-700 mb-4">
+                    <span class="material-symbols-outlined">directions_bus</span>
+                </div>
+                <h3 class="text-xl font-bold font-headline text-slate-900 mb-2">No trips available</h3>
+                <p class="text-slate-500">There are no available routes for this direction right now.</p>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                @foreach (var trip in Model)
+                {
+                    <div class="bg-white rounded-xl p-6 md:p-7 shadow-[0_12px_24px_rgba(108,69,175,0.06)] border border-slate-200/60 hover:shadow-[0_16px_32px_rgba(108,69,175,0.10)] transition">
+                        <div class="flex items-start justify-between gap-4 mb-5">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-widest text-violet-600 mb-2">
+                                    Trip #@trip.trip_id
+                                </p>
+                                <h3 class="text-xl font-bold font-headline text-slate-900">
+                                    @(trip.Direction != null ? trip.Direction.direction_name : "Route")
+                                </h3>
+                                <p class="text-slate-500 text-sm mt-1">
+                                    @(trip.Metro != null ? trip.Metro.station_name : "Metro Station")
+                                </p>
+                            </div>
+
+                            <div class="bg-violet-100 p-3 rounded-2xl">
+                                <span class="material-symbols-outlined text-violet-700">directions_bus</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider @GetStatusClass(trip.status)">
+                                @trip.status
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mb-5">
+                            <div class="bg-slate-50 rounded-xl p-4">
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Departure</p>
+                                <p class="font-bold text-slate-900">@trip.departure_time.ToString("hh\\:mm")</p>
+                            </div>
+
+                            <div class="bg-slate-50 rounded-xl p-4">
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Arrival</p>
+                                <p class="font-bold text-slate-900">@trip.arrival_time.ToString("hh\\:mm")</p>
+                            </div>
+
+                            <div class="bg-slate-50 rounded-xl p-4">
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Driver</p>
+                                <p class="font-bold text-slate-900">@(trip.Driver != null ? trip.Driver.driver_name : "-")</p>
+                            </div>
+
+                            <div class="bg-slate-50 rounded-xl p-4">
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Seats</p>
+                                <p class="font-bold text-slate-900">@trip.available_seats / @trip.total_seats</p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <a asp-action="TripDetails"
+                               asp-route-id="@trip.trip_id"
+                               class="primary-gradient text-white font-bold font-label py-4 px-6 rounded-xl shadow-lg shadow-violet-200 active:scale-95 transition-transform w-full text-center">
+                                View Details
+                            </a>
+
+                            <form asp-action="JoinTrip" method="post" class="w-full">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="tripId" value="@trip.trip_id" />
+                                <button type="submit"
+                                        class="bg-slate-100 text-violet-700 font-bold font-label py-4 px-6 rounded-xl hover:bg-violet-100 transition-colors w-full">
+                                    Book Now
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+</main>
+
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl bottom-nav-shadow border-t border-slate-200/60">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="grid grid-cols-3 h-20">
+            <a asp-controller="Student"
+               asp-action="TodayTrips"
+               class="flex flex-col items-center justify-center gap-1 text-violet-700">
+                <span class="material-symbols-outlined">home</span>
+                <span class="text-xs font-bold">Home</span>
+            </a>
+
+            <a asp-controller="Student"
+               asp-action="MyBookings"
+               class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-violet-700 transition">
+                <span class="material-symbols-outlined">confirmation_number</span>
+                <span class="text-xs font-bold">Bookings</span>
+            </a>
+
+            <a asp-controller="Student"
+               asp-action="Profile"
+               class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-violet-700 transition">
+                <span class="material-symbols-outlined">person</span>
+                <span class="text-xs font-bold">Profile</span>
+            </a>
+        </div>
+    </div>
+</nav>

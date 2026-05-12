@@ -1,0 +1,834 @@
+@{
+    ViewData["Title"] = "Track Trip";
+    Layout = null;
+    var tripId = ViewBag.TripId;
+    var googleMapsApiKey = ViewBag.GoogleMapsApiKey as string ?? string.Empty;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Trip</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100dvh;
+            margin: 0;
+        }
+
+        .tracking-topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 50;
+            border-bottom: 1px solid rgba(229, 231, 235, 0.95);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+        }
+
+        .tracking-topbar-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            min-height: 3.5rem;
+            padding: 0 1rem;
+        }
+
+        .map-surface {
+            position: fixed;
+            inset: 3.5rem 0 0;
+            width: 100%;
+            height: calc(100dvh - 3.5rem);
+        }
+
+        .tracking-sheet {
+            position: fixed;
+            left: 0.75rem;
+            right: 0.75rem;
+            bottom: 0.75rem;
+            margin: 0 auto;
+            max-width: 32rem;
+            max-height: min(23rem, 45dvh);
+            border-radius: 1.75rem;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            padding: 0.95rem 0.95rem calc(0.95rem + env(safe-area-inset-bottom, 0px));
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            z-index: 50;
+        }
+
+        .sheet-handle {
+            width: 2.75rem;
+            height: 0.32rem;
+            border-radius: 999px;
+            background: #d1d5db;
+            margin: 0 auto 0.8rem;
+        }
+
+        .tracking-header {
+            margin-bottom: 0.8rem;
+        }
+
+        .tracking-title {
+            margin-top: 0.6rem;
+            font-size: 1.55rem;
+            line-height: 1.2;
+        }
+
+        .tracking-subtitle {
+            margin-top: 0.35rem;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .tracking-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.7rem;
+        }
+
+        .tracking-info-card {
+            min-width: 0;
+            border-radius: 1rem;
+            background: #f3f4f6;
+            padding: 0.8rem 0.85rem;
+        }
+
+        .tracking-info-value {
+            font-size: 0.95rem;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        @@media (max-width: 767px) {
+            .tracking-topbar-inner {
+                padding: 0 0.85rem;
+            }
+
+            .map-surface {
+                inset: 3.5rem 0 0;
+                height: calc(100dvh - 3.5rem);
+            }
+
+            .tracking-sheet {
+                left: 0.5rem;
+                right: 0.5rem;
+                bottom: 0;
+                max-width: none;
+                max-height: min(22rem, 42dvh);
+                border-radius: 1.5rem 1.5rem 0 0;
+                padding: 0.85rem 0.85rem calc(0.85rem + env(safe-area-inset-bottom, 0px));
+                box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.14);
+            }
+
+            .tracking-title {
+                font-size: 1.4rem;
+            }
+
+            .tracking-subtitle {
+                font-size: 0.85rem;
+            }
+
+            .tracking-grid {
+                gap: 0.6rem;
+            }
+
+            .tracking-info-card {
+                padding: 0.75rem 0.8rem;
+            }
+        }
+
+        @@media (max-width: 420px) {
+            .tracking-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tracking-title {
+                font-size: 1.28rem;
+            }
+
+            .tracking-info-value {
+                font-size: 0.92rem;
+            }
+        }
+
+        @@media (min-width: 768px) {
+            .sheet-handle {
+                display: none;
+            }
+
+            .tracking-sheet {
+                bottom: 1.25rem;
+                max-height: none;
+                padding: 1.25rem;
+            }
+
+            .tracking-header {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen overflow-hidden">
+    <div class="tracking-topbar">
+        <div class="tracking-topbar-inner">
+            <a asp-action="TodayTrips" class="flex items-center gap-2">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span class="font-bold text-violet-700">UniBus</span>
+            </a>
+        </div>
+    </div>
+
+    <div id="map" class="map-surface"></div>
+
+    <div class="tracking-sheet">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <div class="tracking-header">
+            <span id="statusBadge" class="inline-flex rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-700">
+                Loading
+            </span>
+            <h2 id="etaText" class="tracking-title text-2xl font-extrabold">Loading...</h2>
+            <p id="routeText" class="tracking-subtitle text-sm text-gray-500">Preparing route details...</p>
+        </div>
+
+        <div class="tracking-grid">
+            <div class="tracking-info-card">
+                <p class="text-xs text-gray-400 uppercase tracking-wide">Driver</p>
+                <p id="driverName" class="tracking-info-value font-bold">Loading...</p>
+            </div>
+            <div class="tracking-info-card">
+                <p class="text-xs text-gray-400 uppercase tracking-wide">Bus</p>
+                <p id="busPlate" class="tracking-info-value font-bold">Loading...</p>
+            </div>
+            <div class="tracking-info-card">
+                <p class="text-xs text-gray-400 uppercase tracking-wide">Start</p>
+                <p id="startName" class="tracking-info-value font-bold">--</p>
+            </div>
+            <div class="tracking-info-card">
+                <p class="text-xs text-gray-400 uppercase tracking-wide">End</p>
+                <p id="endName" class="tracking-info-value font-bold">--</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let map;
+        let routePolyline;
+        let liveBusMarker;
+        let markerAnimationFrame = null;
+        let liveLocationTimer = null;
+        let liveLocationRequestInFlight = false;
+        let lastLiveTimestamp = null;
+        let hasCenteredOnLiveBus = false;
+        let directionsService = null;
+
+        const tripId = Number("@tripId");
+        const routeMarkers = [];
+        const LIVE_POLL_INTERVAL_MS = 4000;
+        const MARKER_ANIMATION_MS = 2500;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 14,
+                center: { lat: 24.7136, lng: 46.6753 },
+                disableDefaultUI: true,
+                gestureHandling: "greedy"
+            });
+
+            loadTrackingSnapshot();
+            startLivePolling();
+        }
+
+        function startLivePolling() {
+            if (liveLocationTimer) {
+                return;
+            }
+
+            loadLiveLocation();
+            liveLocationTimer = setInterval(() => {
+                if (!liveLocationRequestInFlight) {
+                    loadLiveLocation();
+                }
+            }, LIVE_POLL_INTERVAL_MS);
+        }
+
+        function stopLivePolling() {
+            if (liveLocationTimer) {
+                clearInterval(liveLocationTimer);
+                liveLocationTimer = null;
+            }
+        }
+
+        async function loadTrackingSnapshot() {
+            try {
+                const response = await fetch(`/Student/GetTrackingSnapshot?tripId=${tripId}`);
+                const data = await response.json();
+
+                if (data.success === false) {
+                    throw new Error(data.message || "Unable to load trip.");
+                }
+
+                await renderTrackingSnapshot(data);
+            } catch (error) {
+                console.error(error);
+                document.getElementById("etaText").innerText = "Unable to load trip";
+                document.getElementById("routeText").innerText = "Please try again later.";
+            }
+        }
+
+        async function loadLiveLocation() {
+            liveLocationRequestInFlight = true;
+
+            try {
+                const response = await fetch(`/Student/GetLiveLocation?tripId=${tripId}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    setStatusBadge("Unavailable", ["bg-rose-100", "text-rose-700"]);
+                    return;
+                }
+
+                document.getElementById("driverName").innerText = data.driverName ?? "-";
+                document.getElementById("busPlate").innerText = data.busPlate ?? "-";
+                updateStudentEta(data);
+
+                if (data.status === "Completed") {
+                    setStatusBadge("Completed", ["bg-slate-200", "text-slate-700"]);
+
+                    if (data.liveBusLocation) {
+                        syncLiveLocation(data.liveBusLocation);
+                    }
+
+                    stopLivePolling();
+                    return;
+                }
+
+                if (data.tripStarted === false) {
+                    setStatusBadge("Trip Not Started", ["bg-amber-100", "text-amber-700"]);
+                    return;
+                }
+
+                if (data.liveBusLocation) {
+                    setStatusBadge("Live Tracking", ["bg-emerald-100", "text-emerald-700"]);
+                    syncLiveLocation(data.liveBusLocation);
+                } else {
+                    setStatusBadge("Waiting for GPS", ["bg-sky-100", "text-sky-700"]);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                liveLocationRequestInFlight = false;
+            }
+        }
+
+        async function renderTrackingSnapshot(data) {
+            clearRouteMarkers();
+            clearPolyline();
+
+            updateStudentEta(data);
+            updateStudentStopSummary(data);
+            document.getElementById("driverName").innerText = data.driverName ?? "-";
+            document.getElementById("busPlate").innerText = data.busPlate ?? "-";
+            document.getElementById("startName").innerText = data.startLocation?.name ?? "--";
+            document.getElementById("endName").innerText = data.endLocation?.name ?? "--";
+
+            setStatusBadge(
+                data.liveBusLocation ? "Live Tracking" : data.status,
+                data.liveBusLocation
+                    ? ["bg-emerald-100", "text-emerald-700"]
+                    : data.status === "Completed"
+                        ? ["bg-slate-200", "text-slate-700"]
+                        : ["bg-violet-100", "text-violet-700"]
+            );
+
+            const roadPath = await resolveRoadPolylinePath(data);
+            logRoadPolylineState(data, roadPath);
+            renderRouteMarkers(data);
+            renderRoutePolyline(roadPath);
+            fitMap(data, roadPath);
+
+            if (data.liveBusLocation) {
+                syncLiveLocation(data.liveBusLocation, { animate: false, forceCenter: true });
+            }
+        }
+
+        function renderRouteMarkers(data) {
+            if (Array.isArray(data.optimizedRoute)) {
+                // The backend now decides which optimized route points are pickup stops (S1, S2, ...)
+                // and which single final destination should carry E, so the map stays aligned to route order.
+                data.optimizedRoute.forEach(point => {
+                    const marker = createRouteMarker(point);
+                    if (marker) {
+                        routeMarkers.push(marker);
+                    }
+                });
+            }
+        }
+
+        function renderRoutePolyline(path) {
+            if (path.length < 2) {
+                return;
+            }
+
+            routePolyline = new google.maps.Polyline({
+                path,
+                strokeColor: "#7c3aed",
+                strokeOpacity: 0.9,
+                strokeWeight: 5
+            });
+
+            routePolyline.setMap(map);
+        }
+
+        async function resolveRoadPolylinePath(data) {
+            const encodedPath = decodeRoadPolyline(data.polyline);
+            if (encodedPath.length >= 2) {
+                return encodedPath;
+            }
+
+            if (!Array.isArray(data.optimizedRoute) || data.optimizedRoute.length < 2) {
+                return [];
+            }
+
+            return await requestRoadPolylineFromGoogle(data.optimizedRoute);
+        }
+
+        function decodeRoadPolyline(polyline) {
+            if (!polyline) {
+                return [];
+            }
+
+            if (!google.maps.geometry?.encoding) {
+                console.warn("Google geometry library is unavailable, so the encoded road polyline could not be decoded.");
+                return [];
+            }
+
+            return google.maps.geometry.encoding.decodePath(polyline).map(point => ({
+                lat: point.lat(),
+                lng: point.lng()
+            }));
+        }
+
+        async function requestRoadPolylineFromGoogle(optimizedRoute) {
+            const request = buildClientDirectionsRequest(optimizedRoute);
+            if (!request) {
+                return [];
+            }
+
+            directionsService ??= new google.maps.DirectionsService();
+
+            console.info("Student tracking requested Google road polyline in browser fallback mode.", {
+                routeOrder: buildRouteOrderLabel(optimizedRoute),
+                waypointOrder: request.waypoints.map(waypoint => `${waypoint.location.lat},${waypoint.location.lng}`),
+                optimizeWaypoints: request.optimizeWaypoints
+            });
+
+            return await new Promise(resolve => {
+                directionsService.route(request, (result, status) => {
+                    const routes = Array.isArray(result?.routes) ? result.routes : [];
+                    const overviewPath = routes[0]?.overview_path ?? [];
+                    console.info("Student tracking browser Directions response received.", {
+                        status,
+                        routesCount: routes.length,
+                        hasOverviewPath: overviewPath.length > 1
+                    });
+
+                    if (status !== "OK" || overviewPath.length < 2) {
+                        console.warn("Student tracking could not restore the Google road polyline in browser fallback mode.", status);
+                        resolve([]);
+                        return;
+                    }
+
+                    resolve(overviewPath.map(point => ({
+                        lat: point.lat(),
+                        lng: point.lng()
+                    })));
+                });
+            });
+        }
+
+        function buildClientDirectionsRequest(optimizedRoute) {
+            const orderedPoints = optimizedRoute
+                .map(toLatLngLiteral)
+                .filter(point => point !== null);
+
+            if (orderedPoints.length < 2 || !google.maps.DirectionsService) {
+                return null;
+            }
+
+            const origin = orderedPoints[0];
+            const destination = orderedPoints[orderedPoints.length - 1];
+            const waypointPoints = orderedPoints.slice(1, -1);
+
+            // Keep the optimizer's exact stop order and let Google only return the road-following shape.
+            return {
+                origin,
+                destination,
+                waypoints: waypointPoints.map(location => ({
+                    location,
+                    stopover: true
+                })),
+                optimizeWaypoints: false,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+        }
+
+        function buildRouteOrderLabel(optimizedRoute) {
+            return optimizedRoute.map(point => point.markerLabel
+                ? `${point.markerLabel}:${point.name || "Point"}`
+                : `${point.type || "point"}:${point.name || "Point"}`).join(" -> ");
+        }
+
+        function logRoadPolylineState(data, roadPath) {
+            if (data.hasRoadPolyline) {
+                console.info("Student tracking rendered the backend Google road polyline.", {
+                    polylineLength: data.polyline?.length ?? 0
+                });
+                return;
+            }
+
+            if (roadPath.length >= 2) {
+                console.info("Student tracking restored the Google road polyline via browser Directions fallback.", {
+                    reason: data.polylineFailureReason || "Backend polyline unavailable"
+                });
+                return;
+            }
+
+            console.warn("Google road polyline unavailable for student tracking.", data.polylineFailureReason || "Unknown reason");
+        }
+
+        function syncLiveLocation(liveBusLocation, options = {}) {
+            const timestamp = liveBusLocation?.timestamp ?? null;
+
+            if (timestamp && lastLiveTimestamp === timestamp && liveBusMarker) {
+                return;
+            }
+
+            if (timestamp) {
+                lastLiveTimestamp = timestamp;
+            }
+
+            updateLiveBusMarker(liveBusLocation, options);
+        }
+
+        function updateLiveBusMarker(liveBusLocation, options = {}) {
+            const position = toLatLngLiteral(liveBusLocation);
+            if (!position) {
+                return;
+            }
+
+            if (!liveBusMarker) {
+                liveBusMarker = new google.maps.Marker({
+                    position,
+                    map,
+                    title: "Live Bus",
+                    label: {
+                        text: "Bus",
+                        color: "#111827",
+                        fontWeight: "700"
+                    },
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        fillColor: "#facc15",
+                        fillOpacity: 1,
+                        strokeColor: "#92400e",
+                        strokeWeight: 2,
+                        scale: 12
+                    },
+                    zIndex: 999
+                });
+            } else {
+                animateMarkerTo(position, options.animate === false ? 0 : MARKER_ANIMATION_MS);
+            }
+
+            ensureBusVisible(position, options.forceCenter === true);
+        }
+
+        function animateMarkerTo(targetPosition, durationMs) {
+            if (!liveBusMarker) {
+                return;
+            }
+
+            if (markerAnimationFrame) {
+                cancelAnimationFrame(markerAnimationFrame);
+                markerAnimationFrame = null;
+            }
+
+            const start = liveBusMarker.getPosition();
+            if (!start || durationMs <= 0) {
+                liveBusMarker.setPosition(targetPosition);
+                return;
+            }
+
+            const startPosition = { lat: start.lat(), lng: start.lng() };
+            const startTime = performance.now();
+
+            const step = now => {
+                const progress = Math.min(1, (now - startTime) / durationMs);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const nextPosition = {
+                    lat: startPosition.lat + ((targetPosition.lat - startPosition.lat) * eased),
+                    lng: startPosition.lng + ((targetPosition.lng - startPosition.lng) * eased)
+                };
+
+                liveBusMarker.setPosition(nextPosition);
+
+                if (progress < 1) {
+                    markerAnimationFrame = requestAnimationFrame(step);
+                } else {
+                    markerAnimationFrame = null;
+                }
+            };
+
+            markerAnimationFrame = requestAnimationFrame(step);
+        }
+
+        function ensureBusVisible(position, forceCenter) {
+            if (!map) {
+                return;
+            }
+
+            const bounds = map.getBounds();
+            if (forceCenter || !hasCenteredOnLiveBus || !bounds || !bounds.contains(position)) {
+                map.panTo(position);
+                hasCenteredOnLiveBus = true;
+            }
+        }
+
+        function fitMap(data, roadPath = []) {
+            const bounds = new google.maps.LatLngBounds();
+            let hasBounds = false;
+
+            const extend = point => {
+                const position = toLatLngLiteral(point);
+                if (!position) {
+                    return;
+                }
+
+                bounds.extend(position);
+                hasBounds = true;
+            };
+
+            extend(data.startLocation);
+            extend(data.endLocation);
+
+            if (Array.isArray(data.stops)) {
+                data.stops.forEach(extend);
+            }
+
+            roadPath.forEach(point => {
+                bounds.extend(point);
+                hasBounds = true;
+            });
+
+            if (hasBounds) {
+                map.fitBounds(bounds, 70);
+            }
+        }
+
+        function createRouteMarker(point) {
+            const position = toLatLngLiteral(point);
+            if (!position) {
+                return null;
+            }
+
+            const style = getRouteMarkerStyle(point);
+
+            const markerConfig = {
+                position,
+                map,
+                title: buildMarkerTitle(point),
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: style.fillColor,
+                    fillOpacity: 1,
+                    strokeColor: style.strokeColor,
+                    strokeWeight: style.strokeWeight,
+                    scale: style.scale
+                },
+                zIndex: style.zIndex
+            };
+
+            if (style.labelText) {
+                markerConfig.label = {
+                    text: style.labelText,
+                    color: style.labelColor,
+                    fontWeight: "700",
+                    fontSize: "10px"
+                };
+            }
+
+            return new google.maps.Marker(markerConfig);
+        }
+
+        function getRouteMarkerStyle(point) {
+            if (point?.markerLabel === "E") {
+                return {
+                    labelText: "E",
+                    labelColor: "#ffffff",
+                    fillColor: "#dc2626",
+                    strokeColor: "#ffffff",
+                    strokeWeight: 2,
+                    scale: 11,
+                    zIndex: 40
+                };
+            }
+
+            if (point?.markerLabel) {
+                return {
+                    labelText: String(point.markerLabel),
+                    labelColor: "#ffffff",
+                    fillColor: "#2563eb",
+                    strokeColor: "#ffffff",
+                    strokeWeight: 2,
+                    scale: 11,
+                    zIndex: 35
+                };
+            }
+
+            return {
+                labelText: null,
+                labelColor: "#ffffff",
+                fillColor: "#15803d",
+                strokeColor: "#ffffff",
+                strokeWeight: 2,
+                scale: 7,
+                zIndex: 20
+            };
+        }
+
+        function buildMarkerTitle(point) {
+            if (point?.markerLabel) {
+                return `${point.markerLabel} - ${point.name || "Route point"}`;
+            }
+
+            return point?.type === "start"
+                ? `Route start - ${point.name || "Start"}`
+                : (point?.name || "Route point");
+        }
+
+        function clearRouteMarkers() {
+            routeMarkers.forEach(marker => marker.setMap(null));
+            routeMarkers.length = 0;
+        }
+
+        function clearPolyline() {
+            if (!routePolyline) {
+                return;
+            }
+
+            routePolyline.setMap(null);
+            routePolyline = null;
+        }
+
+        function setStatusBadge(text, classes) {
+            const badge = document.getElementById("statusBadge");
+            badge.innerText = text || "Unknown";
+            badge.className = "inline-flex rounded-full px-3 py-1 text-xs font-bold";
+            classes.forEach(cssClass => badge.classList.add(cssClass));
+        }
+
+        function updateStudentEta(data) {
+            const tripStarted = data.tripStarted === true || data.status === "Started" || data.status === "Active";
+
+            if (data.status === "Completed") {
+                document.getElementById("etaText").innerText = "Trip completed";
+                return;
+            }
+
+            if (!tripStarted) {
+                document.getElementById("etaText").innerText = "Trip not started yet";
+                return;
+            }
+
+            const rawEtaMinutes = data.studentEtaMinutes;
+            if (rawEtaMinutes !== null && rawEtaMinutes !== undefined && rawEtaMinutes !== "") {
+                const etaMinutes = Number(rawEtaMinutes);
+                if (!Number.isFinite(etaMinutes)) {
+                    document.getElementById("etaText").innerText = "Calculating your ETA...";
+                    return;
+                }
+
+                document.getElementById("etaText").innerText =
+                    data.studentArrivingSoon === true
+                        ? "Arriving now"
+                        : `Arriving in ${etaMinutes} min`;
+                return;
+            }
+
+            if (data.studentEstimatedArrivalTime) {
+                document.getElementById("etaText").innerText =
+                    `ETA ${formatTime(data.studentEstimatedArrivalTime)}`;
+                return;
+            }
+
+            document.getElementById("etaText").innerText = "Calculating your ETA...";
+        }
+
+        function updateStudentStopSummary(data) {
+            const routeText = document.getElementById("routeText");
+            routeText.innerText = buildStudentRouteText(data);
+        }
+
+        function buildStudentRouteText(data) {
+            if (data.studentStopName) {
+                const stopPrefix = data.studentStopLabel
+                    ? `${data.studentStopLabel} - `
+                    : "";
+
+                return `${data.directionName} - Your stop: ${stopPrefix}${data.studentStopName}`;
+            }
+
+            return `${data.directionName} - Departs ${data.departureTime}`;
+        }
+
+        function toLatLngLiteral(point) {
+            const lat = Number(point?.lat ?? point?.latitude);
+            const lng = Number(point?.lng ?? point?.longitude);
+
+            if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+                return null;
+            }
+
+            return { lat, lng };
+        }
+
+        function formatTime(value) {
+            if (!value) {
+                return "--";
+            }
+
+            const parsed = new Date(value);
+            if (Number.isNaN(parsed.getTime())) {
+                return value;
+            }
+
+            return parsed.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
+        window.initMap = initMap;
+    </script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey&callback=initMap&libraries=geometry"></script>
+</body>
+</html>

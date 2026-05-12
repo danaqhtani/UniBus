@@ -1,0 +1,127 @@
+﻿@model UniBusApp.Models.Driver
+
+@{
+    ViewBag.Title = "Driver Profile";
+    Layout = null; 
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driver Profile - UniBus</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        driverPrimary: "#5f7f69", 
+                        driverSoft: "#e8f1ea",    
+                        driverBg: "#f6f8f5",      
+                        driverText: "#1f2a23",    
+                        driverMuted: "#6d786f"    
+                    },
+                    fontFamily: {
+                        sans: ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            font-feature-settings: "liga";
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-driverBg font-sans text-driverText flex flex-col">
+
+    <header class="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-100">
+        <div class="h-16 px-4 sm:px-6 max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl font-extrabold text-driverPrimary">UniBus</span>
+            </div>
+
+            <a href="/Driver/Logout"
+               class="px-4 py-2 rounded-full bg-red-50 text-red-700 text-sm font-semibold hover:bg-red-100 transition">
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-grow pt-24 pb-28 px-4 sm:px-6 max-w-4xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-4xl font-extrabold mb-2 text-driverPrimary">Profile</h1>
+            <p class="text-driverMuted text-lg">Driver account information</p>
+        </header>
+
+        <section class="bg-white rounded-[30px] p-6 md:p-8 shadow-[0_24px_50px_rgba(0,0,0,0.06)] border border-[#e5ece5]">
+
+            <div class="flex flex-col sm:flex-row sm:items-center gap-5 mb-10">
+                <div class="w-20 h-20 rounded-full bg-driverSoft text-driverPrimary font-extrabold text-3xl flex items-center justify-center">
+                    @(string.IsNullOrEmpty(Model.driver_name) ? "D" : Model.driver_name.Substring(0, 1).ToUpper())
+                </div>
+
+                <div>
+                    <p class="text-xs uppercase tracking-widest text-driverMuted font-bold mb-1">Driver Profile</p>
+                    <h2 class="text-3xl font-extrabold text-driverPrimary">Captain @Model.driver_name</h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                @* Full Name (Captain) *@
+                <div class="bg-[#f6f8f5] rounded-2xl p-5">
+                    <p class="text-[10px] uppercase tracking-widest text-driverMuted font-bold mb-2">Full Name</p>
+                    <p class="text-lg font-bold">Captain @Model.driver_name</p>
+                </div>
+
+                @* Phone Number *@
+                <div class="bg-[#f6f8f5] rounded-2xl p-5">
+                    <p class="text-[10px] uppercase tracking-widest text-driverMuted font-bold mb-2">Phone Number</p>
+                    <p class="text-lg font-bold">@Model.phone_number</p>
+                </div>
+
+                @* Bus Plate Number *@
+                <div class="bg-[#f6f8f5] rounded-2xl p-5">
+                    <p class="text-[10px] uppercase tracking-widest text-driverMuted font-bold mb-2">Bus Plate Number</p>
+                    <p class="text-lg font-bold">@Model.bus_plate</p>
+                </div>
+
+                @* Bus Color *@
+                <div class="bg-[#f6f8f5] rounded-2xl p-5">
+                    <p class="text-[10px] uppercase tracking-widest text-driverMuted font-bold mb-2">Bus Color</p>
+                    <p class="text-lg font-bold">@Model.bus_color</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-xl border-t border-gray-100 z-50">
+        <div class="h-16 flex items-center justify-around max-w-lg mx-auto">
+
+            <a href="/Driver/Home" class="flex flex-col items-center text-driverMuted hover:text-driverPrimary group">
+                <span class="material-symbols-outlined text-2xl group-hover:scale-105 transition-transform">Home</span>
+                <span class="text-[11px] font-semibold mt-1">Home</span>
+            </a>
+
+            <a href="/Driver/Profile" class="flex flex-col items-center text-driverPrimary">
+                <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1, 'wght' 400">person</span>
+                <span class="text-[11px] font-semibold mt-1">Profile</span>
+            </a>
+
+        </div>
+    </nav>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+﻿@{
+    ViewBag.Title = "Start";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>UniBus - Start</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8b5cf6",
+                        secondary: "#ec4899",
+                        background: "#faf7fb",
+                        soft: "#f3e8ff",
+                        softPink: "#fce7f3"
+                    },
+                    fontFamily: {
+                        headline: ["Manrope", "sans-serif"],
+                        body: ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="min-h-screen bg-background font-body">
+
+    <!-- PAGE WRAPPER -->
+    <div class="min-h-screen flex items-center justify-center px-6 py-10 bg-[radial-gradient(circle_at_top_left,_rgba(236,72,153,0.10),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(139,92,246,0.12),_transparent_30%)]">
+
+        <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 bg-white rounded-[32px] shadow-[0_24px_60px_rgba(0,0,0,0.08)] overflow-hidden">
+
+            <!-- ===================================================
+                 LEFT HERO SECTION (IMAGE + TEXT OVER IMAGE)
+            ==================================================== -->
+            <div class="hidden lg:flex flex-col justify-between relative min-h-[720px] overflow-hidden">
+
+                <!-- Background Image -->
+                <div class="absolute inset-0">
+                    <img src="@Url.Content("~/Content/images/register-side.jpg")"
+                         alt="UniBus Hero"
+                         class="w-full h-full object-cover" />
+                </div>
+
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-black/35 to-black/55"></div>
+
+                <!-- Decorative Glow -->
+                <div class="absolute top-[-60px] right-[-60px] w-56 h-56 bg-pink-300/20 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-[-80px] left-[-50px] w-64 h-64 bg-violet-300/20 rounded-full blur-3xl"></div>
+
+                <!-- Top Content -->
+                <div class="relative z-10 p-10 pt-14">
+                    <h1 class="font-headline text-5xl font-black leading-tight text-white drop-shadow-lg">
+                        UniBus
+                    </h1>
+
+                    <p class="mt-4 text-white/90 text-base leading-7 max-w-md">
+                        SMART RIDES , BETTER JOURNEYS .
+                        Choose how you want to continue.
+                    </p>
+                </div>
+
+                <!-- Bottom Glass Card -->
+                <div class="relative z-10 p-10">
+                    <div class="bg-white/15 backdrop-blur-xl rounded-3xl p-6 border border-white/15 shadow-xl">
+
+                        <p class="text-sm uppercase tracking-[0.2em] text-white/75 mb-2">
+                            Welcome
+                        </p>
+
+                        <h3 class="font-headline text-2xl font-bold text-white mb-2">
+                            Your daily ride starts here
+                        </h3>
+
+                        <p class="text-white/85 text-sm leading-6">
+                            Log in, create an account, or continue as a driver
+                            through the dedicated portal.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================================================
+                 RIGHT ACTION SECTION
+            ==================================================== -->
+            <div class="p-8 sm:p-10 lg:p-12 flex items-center">
+
+                <div class="max-w-md mx-auto w-full">
+
+                    <!-- Mobile Logo -->
+                    <div class="lg:hidden text-center mb-8">
+                        <img src="@Url.Content("~/Content/images/register-side.jpg")"
+                             alt="UniBus"
+                             class="w-28 h-28 object-contain mx-auto mb-4 drop-shadow-lg" />
+
+                        <h1 class="font-headline text-4xl font-black text-gray-800">
+                            UniBus
+                        </h1>
+                    </div>
+
+                    <!-- Heading -->
+                    <div class="mb-8">
+                        <p class="text-sm uppercase tracking-[0.18em] text-primary mb-3 font-semibold">
+                            Get Started
+                        </p>
+
+                        <h2 class="font-headline text-3xl sm:text-4xl font-black text-gray-900 mb-2">
+                            Choose your access
+                        </h2>
+
+                        <p class="text-gray-500 text-sm sm:text-base">
+                            Select how you want to continue
+                        </p>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="space-y-4">
+
+                        <a href="/Account/Login"
+                           class="flex items-center justify-between w-full rounded-2xl border border-purple-100 bg-purple-50 px-5 py-5 text-primary font-bold text-lg hover:bg-purple-100 transition">
+
+                            <span>Have an account?</span>
+                            <span>→</span>
+                        </a>
+
+                        <a href="/Account/Register"
+                           class="flex items-center justify-between w-full rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-5 text-white font-bold text-lg shadow-[0_14px_28px_rgba(236,72,153,0.18)] hover:opacity-95 transition">
+
+                            <span>Create account</span>
+                            <span>→</span>
+                        </a>
+
+                    </div>
+
+                    <!-- Driver -->
+                    <div class="mt-10 text-center text-gray-500 text-sm">
+                        Driver?
+                        <a href="/Driver/Login"
+                           class="font-semibold text-primary hover:text-fuchsia-600 transition">
+                            Go to driver page
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

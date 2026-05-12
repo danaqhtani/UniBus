@@ -1,0 +1,223 @@
+﻿@model UniBus.Models.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>UniBus Login</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8b5cf6",
+                        primarySoft: "#f3e8ff",
+                        background: "#faf7fb",
+                        borderSoft: "#eadcf0",
+                        textMain: "#2f2f2f"
+                    },
+                    fontFamily: {
+                        headline: ["inter", "sans-serif"],
+                        body: ["inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-background font-body text-textMain">
+
+    <div class="min-h-screen flex items-center justify-center px-6 py-10 bg-[radial-gradient(circle_at_top_left,_rgba(236,72,153,0.10),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(139,92,246,0.12),_transparent_30%)]">
+        <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 bg-white rounded-[32px] shadow-[0_24px_60px_rgba(0,0,0,0.08)] overflow-hidden">
+
+            <div class="hidden lg:flex flex-col justify-between bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-400 p-10 text-white relative overflow-hidden">
+                <div class="absolute top-[-60px] right-[-60px] w-56 h-56 bg-white/10 rounded-full blur-2xl"></div>
+                <div class="absolute bottom-[-80px] left-[-50px] w-64 h-64 bg-white/10 rounded-full blur-2xl"></div>
+
+                <div class="relative z-10">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/20 backdrop-blur text-3xl font-black mb-6">
+                        U
+                    </div>
+                    <h1 class="font-headline text-5xl font-black leading-tight">UniBus</h1>
+                    <p class="mt-4 text-white/85 text-base leading-7 max-w-md">
+                        Log in using your university email and continue to your routes and bookings.
+                    </p>
+                </div>
+
+                <div class="relative z-10">
+                    <div class="bg-white/15 backdrop-blur rounded-3xl p-6 border border-white/15">
+                        <p class="text-sm uppercase tracking-[0.2em] text-white/75 mb-2">Student Access</p>
+                        <h3 class="font-headline text-2xl font-bold mb-2">Welcome back</h3>
+                        <p class="text-white/80 text-sm leading-6">
+                            Access your daily commute in a clean and simple way.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-8 sm:p-10 lg:p-12">
+                <div class="max-w-md mx-auto">
+
+                    <div class="lg:hidden text-center mb-8">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 text-primary text-3xl font-black mb-4">
+                            U
+                        </div>
+                        <h1 class="font-headline text-4xl font-black text-gray-800">UniBus</h1>
+                    </div>
+
+                    <div class="mb-8">
+                        <p class="text-sm uppercase tracking-[0.18em] text-primary mb-3 font-semibold">Student Access</p>
+                        <h2 class="font-headline text-3xl sm:text-4xl font-black text-gray-900 mb-2">Sign in now</h2>
+                        <p class="text-gray-500 text-sm sm:text-base">Hi, welcome back 👋</p>
+                    </div>
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="mb-4 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="mb-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+                    <form id="loginForm" method="post" action="/Account/Login" class="space-y-5">
+                        @Html.AntiForgeryToken()
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">University Email</label>
+
+                            <div class="flex flex-col sm:flex-row rounded-2xl border border-borderSoft overflow-hidden focus-within:ring-4 focus-within:ring-purple-100 transition">
+                                <input name="EmailPrefix"
+                                       id="emailInput"
+                                       type="text"
+                                       placeholder="Enter your university ID"
+                                       class="w-full h-14 border-none outline-none px-4 text-sm text-textMain placeholder:text-gray-400 bg-white"
+                                       value="@(Model !=null? Model.EmailPrefix:"")"
+                                       required />
+
+                                <div class="h-14 px-4 flex items-center justify-center bg-primarySoft text-primary text-sm font-semibold border-t sm:border-t-0 sm:border-l border-borderSoft whitespace-nowrap">
+                                    @@sm.imamu.edu.sa
+                                </div>
+                            </div>
+
+                            <p id="emailError" class="mt-2 text-sm text-rose-600"></p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+
+                            <div class="relative rounded-2xl border border-borderSoft focus-within:ring-4 focus-within:ring-purple-100 transition">
+                                @Html.PasswordFor(m => m.Password, new
+                                {
+                                    @class = "w-full h-14 border-none outline-none px-4 pr-20 text-sm text-textMain placeholder:text-gray-400 rounded-2xl",
+                                    placeholder = "Enter your password",
+                                    id = "passwordInput",
+                                    required = "required"
+                                })
+
+                                <button type="button"
+                                        id="togglePasswordBtn"
+                                        class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-primary hover:text-fuchsia-600 transition">
+                                    Show
+                                </button>
+                            </div>
+
+                            <p id="passwordError" class="mt-2 text-sm text-rose-600"></p>
+                        </div>
+
+                        <button type="submit"
+                                id="loginBtn"
+                                class="w-full h-14 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold text-base shadow-[0_14px_28px_rgba(236,72,153,0.18)] hover:opacity-95 active:scale-[0.99] transition">
+                            Sign in
+                        </button>
+                    </form>
+
+                    <div class="mt-6 text-center text-sm text-gray-500">
+                        Don’t have an account?
+                        <a href="/Account/Register" class="font-semibold text-primary hover:text-fuchsia-600 transition">Create account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const emailInput = document.getElementById("emailInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const loginForm = document.getElementById("loginForm");
+        const loginBtn = document.getElementById("loginBtn");
+        const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+
+        const emailError = document.getElementById("emailError");
+        const passwordError = document.getElementById("passwordError");
+
+        togglePasswordBtn.addEventListener("click", function () {
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                togglePasswordBtn.textContent = "Hide";
+            } else {
+                passwordInput.type = "password";
+                togglePasswordBtn.textContent = "Show";
+            }
+        });
+
+        function resetErrors() {
+            emailError.textContent = "";
+            passwordError.textContent = "";
+        }
+
+        function validateEmailPrefix(value) {
+            if (!value.trim()) {
+                return "Email is required";
+            }
+
+            if (value.includes("@@")) {
+                return "Write only the part before @@sm.imamu.edu.sa";
+            }
+
+            return "";
+        }
+
+        function validatePassword(value) {
+            if (!value.trim()) {
+                return "Password is required";
+            }
+
+            return "";
+        }
+
+        loginForm.addEventListener("submit", function (e) {
+            resetErrors();
+
+            const emailMessage = validateEmailPrefix(emailInput.value);
+            const passwordMessage = validatePassword(passwordInput.value);
+
+            if (emailMessage || passwordMessage) {
+                e.preventDefault();
+
+                if (emailMessage) emailError.textContent = emailMessage;
+                if (passwordMessage) passwordError.textContent = passwordMessage;
+
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = "Signing in...";
+        });
+    </script>
+</body>
+</html>

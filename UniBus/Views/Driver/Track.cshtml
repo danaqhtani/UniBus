@@ -1,0 +1,233 @@
+﻿@{
+    ViewBag.Title = "Driver Track";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driver Track - UniBus</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        driverPrimary: "#5f7f69",
+                        driverSoft: "#e8f1ea",
+                        driverBg: "#f6f8f5",
+                        driverText: "#1f2a23",
+                        driverMuted: "#6d786f",
+                        driverDanger: "#dca4a4"
+                    },
+                    fontFamily: {
+                        sans: ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-driverBg font-sans text-driverText overflow-hidden">
+
+    <!-- ===========================================================
+         MOCK TRACK DATA
+         Frontend only for now
+    ============================================================ -->
+    <script>
+        const trackData = {
+            tripId: "@ViewBag.TripId",
+            tripTime: "9:00 AM",
+            passengers: "8/25",
+            routeName: "University → Metro Station",
+            startPoint: "Imam University Gate",
+            endPoint: "Metro Station",
+            progressPercent: 46,
+            status: "Ready to start"
+        };
+
+        /*
+        REAL BACKEND LATER:
+        - load selected trip details by tripId
+        - load passengers count from bookings
+        - load route details from trip/route tables
+        */
+    </script>
+
+    <header class="fixed top-0 left-0 w-full z-50 bg-white/85 backdrop-blur-xl border-b border-gray-100">
+        <div class="h-16 px-4 sm:px-6 max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="/Driver/Home" class="w-10 h-10 rounded-full hover:bg-[#edf3ed] flex items-center justify-center">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <span class="text-2xl font-extrabold text-driverPrimary">UniBus</span>
+            </div>
+
+            <a href="/Driver/Logout"
+               class="px-4 py-2 rounded-2xl bg-red-50 text-red-700 text-sm font-bold hover:bg-red-100 transition">
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <main class="pt-16 h-screen relative">
+
+        <!-- =======================================================
+             MAP AREA
+             MOCK ONLY
+
+             GOOGLE MAPS LATER:
+             Replace this section with:
+             <div id="map" class="absolute inset-0"></div>
+
+             Then add Google Maps API script and initMap() below.
+        ======================================================== -->
+        <section class="absolute inset-0">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center"></div>
+            <div class="absolute inset-0 bg-white/20"></div>
+
+            <!-- mock route line -->
+            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+                <path d="M160,220 L220,350 L420,510 L590,690 L760,790"
+                      fill="none"
+                      stroke="#bfd0c1"
+                      stroke-width="10"
+                      stroke-linecap="round"></path>
+
+                <path d="M160,220 L220,350 L420,510"
+                      fill="none"
+                      stroke="#5f7f69"
+                      stroke-width="12"
+                      stroke-linecap="round"></path>
+            </svg>
+
+            <!-- start marker -->
+            <div class="absolute left-[13%] top-[18%]">
+                <div class="bg-white px-3 py-1 rounded-full shadow text-xs font-bold">
+                    A
+                </div>
+            </div>
+
+            <!-- mid / bus -->
+            <div class="absolute left-[40%] top-[48%]">
+                <div class="relative">
+                    <div class="absolute inset-0 rounded-full bg-[#95ac99] animate-ping"></div>
+                    <div class="relative w-12 h-12 rounded-full bg-driverPrimary text-white flex items-center justify-center shadow-xl border-2 border-white">
+                        <span class="material-symbols-outlined">directions_bus</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- destination -->
+            <div class="absolute right-[14%] bottom-[18%]">
+                <div class="bg-white px-3 py-1 rounded-full shadow text-xs font-bold">
+                    B
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom floating card -->
+        <section class="absolute left-1/2 -translate-x-1/2 bottom-20 md:bottom-6 w-[92%] sm:w-[88%] md:w-[520px] z-30">
+            <div class="bg-[#dfe7df]/95 backdrop-blur-xl rounded-[30px] shadow-2xl overflow-hidden">
+                <div class="h-1.5 bg-gray-200">
+                    <div class="h-full bg-driverPrimary" style="width:46%"></div>
+                </div>
+
+                <div class="p-5 space-y-5">
+                    <div class="text-center">
+                        <p id="tripTime" class="text-2xl font-extrabold">9:00 AM</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm font-bold text-driverMuted mb-1">Trip ID</p>
+                            <p id="tripId" class="font-bold text-lg">123456</p>
+                        </div>
+
+                        <div>
+                            <p class="text-sm font-bold text-driverMuted mb-1">Passengers</p>
+                            <p id="tripPassengers" class="font-bold text-lg">8/25</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="h-14 rounded-2xl bg-white text-driverText font-bold border border-[#c9d6cb] hover:bg-[#f5f8f5] transition">
+                            Start
+                        </button>
+
+                        <button class="h-14 rounded-2xl bg-[#edc3c3] text-[#7a3f3f] font-bold hover:opacity-95 transition">
+                            End
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-100 z-50">
+        <div class="h-16 flex items-center justify-around">
+            <a href="/Driver/Home" class="flex flex-col items-center text-driverPrimary text-xs font-semibold">
+                <span class="material-symbols-outlined">home</span>
+                Home
+            </a>
+
+            <a href="/Driver/Profile" class="flex flex-col items-center text-driverMuted text-xs font-semibold">
+                <span class="material-symbols-outlined">person</span>
+                Profile
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        document.getElementById("tripTime").textContent = trackData.tripTime;
+        document.getElementById("tripId").textContent = trackData.tripId;
+        document.getElementById("tripPassengers").textContent = trackData.passengers;
+
+        /*
+        SHORTEST PATH ALGORITHM LATER:
+        This is the correct place to consume the result of the route algorithm.
+
+        Example later:
+        - best path coordinates
+        - estimated time
+        - traffic-aware route updates
+        - bus live location updates
+
+        Suggested backend logic location:
+        Services/RouteOptimizationService.cs
+        */
+
+        /*
+        GOOGLE MAPS LATER:
+
+        1. Replace mock map section with:
+           <div id="map" class="absolute inset-0"></div>
+
+        2. Add script:
+           <script async
+             src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+    </script>
+
+    3. Then create:
+    function initMap() {
+    // render map
+    // draw route polyline
+    // place bus marker
+    // place start/end markers
+    }
+    */
+    </script>
+</body>
+</html>

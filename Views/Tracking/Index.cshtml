@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "Track Trip";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Track Trip - UniBus</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#6c45af",
+                        primarySoft: "#ede9fe",
+                        bgMain: "#f8f8fb",
+                        textMain: "#222222",
+                        textMuted: "#666666"
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400;
+        }
+    </style>
+</head>
+
+<body class="bg-bgMain text-textMain font-sans h-screen overflow-hidden">
+
+    <script>
+        const tripData = {
+            tripStatus: "In Transit",
+            etaMinutes: 5,
+            routeName: "Route 42A",
+            routeDirection: "To Metro Station",
+            sourceName: "CCIS Building",
+            destinationName: "Metro Station",
+            driverName: "Marcus Thompson",
+            driverPhone: "+966500000000",
+            busNumber: "BUS-0842",
+            busPlateNumber: "XYZ-4831",
+            departureTime: "09:15 AM",
+            seatNumber: "12F",
+            progressPercent: 68
+        };
+    </script>
+
+    <!-- TOP BAR -->
+    <header class="fixed top-0 w-full bg-white/80 backdrop-blur border-b">
+        <div class="h-16 px-4 flex items-center gap-3">
+
+            <!-- 🔥 عدلت هذا -->
+            <a href="/Trips"
+               class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full">
+                ←
+            </a>
+
+            <span class="text-xl font-bold text-violet-700">UniBus</span>
+        </div>
+    </header>
+
+    <main class="pt-16 h-full relative">
+
+        <!-- MAP -->
+        <section class="absolute inset-0">
+            <div class="absolute inset-0 bg-gray-200"></div>
+
+            <!-- Bus -->
+            <div class="absolute left-[50%] top-[55%]">
+                <div class="w-10 h-10 bg-violet-600 text-white rounded-full flex items-center justify-center">
+                    🚌
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD -->
+        <section class="absolute bottom-20 left-1/2 -translate-x-1/2 w-[90%] max-w-md">
+            <div class="bg-white rounded-2xl shadow-xl p-4 space-y-3">
+
+                <p id="tripStatus" class="text-xs text-pink-600 font-bold">In Transit</p>
+
+                <h1 class="text-xl font-bold">
+                    Arriving in <span id="etaMinutes">5</span> min
+                </h1>
+
+                <p id="routeDirection" class="text-sm text-gray-500"></p>
+
+                <div class="bg-gray-100 rounded-xl p-3">
+                    <p id="driverName" class="font-bold"></p>
+                    <p id="busNumber" class="text-sm text-violet-600"></p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-gray-100 p-2 rounded-lg">
+                        <p class="text-xs text-gray-400">Departure</p>
+                        <p id="departureTime"></p>
+                    </div>
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+                        <p class="text-xs text-gray-400">Seat</p>
+                        <p id="seatNumber"></p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById("tripStatus").textContent = tripData.tripStatus;
+        document.getElementById("etaMinutes").textContent = tripData.etaMinutes;
+        document.getElementById("routeDirection").textContent = tripData.routeName + " • " + tripData.routeDirection;
+        document.getElementById("driverName").textContent = tripData.driverName;
+        document.getElementById("busNumber").textContent = "Bus: " + tripData.busNumber;
+        document.getElementById("departureTime").textContent = tripData.departureTime;
+        document.getElementById("seatNumber").textContent = tripData.seatNumber;
+    </script>
+
+</body>
+</html>

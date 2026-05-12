@@ -1,0 +1,147 @@
+﻿@model UniBusApp.Models.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#6c45af",
+                    background: "#f6f6f8",
+                    textMain: "#2d2f31",
+                    textMuted: "#5a5c5d"
+                },
+                fontFamily: {
+                    headline: ["Manrope", "sans-serif"]
+                },
+                borderRadius: {
+                    xl: "1.5rem"
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    body {
+        background-color: #f6f6f8;
+        color: #2d2f31;
+    }
+</style>
+
+<nav class="fixed top-0 w-full z-50 bg-white shadow">
+    <div class="flex justify-between items-center px-6 h-16 max-w-7xl mx-auto">
+        <a asp-controller="Student" asp-action="TodayTrips"
+           class="text-2xl font-black text-violet-700">
+            UniBus
+        </a>
+
+        <div class="flex items-center gap-3">
+            <form asp-controller="Student" asp-action="Logout" method="post">
+                <button class="bg-rose-50 px-4 py-2 rounded-xl text-rose-700 font-bold hover:bg-rose-100">
+                    Logout
+                </button>
+            </form>
+
+            <div class="h-10 w-10 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-bold">
+                @(string.IsNullOrWhiteSpace(Model.FullName) ? "U" : Model.FullName.Substring(0, 1).ToUpper())
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main class="pt-24 pb-32 px-6 max-w-5xl mx-auto">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="mb-6 bg-green-50 text-green-700 px-4 py-3 rounded-xl">
+            @TempData["Success"]
+        </div>
+    }
+
+    <header class="mb-10">
+        <h1 class="text-4xl font-extrabold mb-2">Profile</h1>
+        <p class="text-textMuted">Your student account information</p>
+    </header>
+
+    <section class="mb-8">
+        <div class="bg-white rounded-xl p-8 shadow">
+
+            <div class="flex items-center gap-6 mb-6">
+                <div class="h-24 w-24 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center text-3xl font-black">
+                    @(string.IsNullOrWhiteSpace(Model.FullName) ? "U" : Model.FullName.Substring(0, 1).ToUpper())
+                </div>
+
+                <div>
+                    <h2 class="text-3xl font-bold">@Model.FullName</h2>
+                </div>
+
+                <div class="ml-auto bg-slate-50 px-4 py-2 rounded-xl">
+                    <p class="text-xs text-slate-500">Student ID</p>
+                    <p class="font-bold">@Model.StudentId</p>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <a asp-action="EditProfile"
+                   class="bg-violet-600 text-white px-5 py-3 rounded-xl font-bold hover:bg-violet-700">
+                    Edit Profile
+                </a>
+
+                <a asp-action="TodayTrips"
+                   class="bg-slate-100 px-5 py-3 rounded-xl font-bold hover:bg-slate-200">
+                    Back
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div class="bg-white p-6 rounded-xl shadow">
+                <p class="text-xs text-slate-500">Full Name</p>
+                <p class="font-bold text-lg">@Model.FullName</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow">
+                <p class="text-xs text-slate-500">University Email</p>
+                <p class="font-bold break-all">@Model.UniversityEmail</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow">
+                <p class="text-xs text-slate-500">Phone</p>
+                <p class="font-bold">@Model.PhoneNumber</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow">
+                <p class="text-xs text-slate-500">Campus</p>
+                <p class="font-bold">@Model.CampusLabel</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="mt-8">
+        <div class="bg-white p-6 rounded-xl shadow border border-rose-200">
+            <h3 class="text-rose-700 font-bold mb-2">Danger Zone</h3>
+
+            <form asp-action="DeleteAccount" method="post"
+                  onsubmit="return confirm('Are you sure?');">
+                @Html.AntiForgeryToken()
+                <button class="bg-rose-600 text-white px-5 py-3 rounded-xl font-bold hover:bg-rose-700">
+                    Delete Account
+                </button>
+            </form>
+        </div>
+    </section>
+
+</main>

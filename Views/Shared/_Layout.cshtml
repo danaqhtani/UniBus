@@ -1,0 +1,59 @@
+﻿@{
+    var controller = (ViewContext.RouteData.Values["controller"]?.ToString() ?? "").ToLower();
+    var action = (ViewContext.RouteData.Values["action"]?.ToString() ?? "").ToLower();
+
+    var isHome = controller == "student" && (action == "todaytrips" || action == "tripdetails" || action == "tracktrip" || action == "dashboard");
+    var isBookings = controller == "student" && action == "mybookings";
+    var isProfile = controller == "student" && (action == "profile" || action == "editprofile");
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - UniBus</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+
+
+
+<body class="bg-gray-100">
+    <div class="min-h-screen pb-24">
+        @RenderBody()
+    </div>
+
+    <nav class="fixed bottom-0 left-0 w-full z-50 bg-white/90 backdrop-blur-xl shadow-[0_-8px_20px_rgba(108,69,175,0.08)] rounded-t-3xl">
+        <div class="flex justify-around items-center px-4 pb-6 pt-3">
+            <a asp-controller="Student"
+               asp-action="TodayTrips"
+               class="flex flex-col items-center justify-center px-5 py-2 transition @(isHome ? "bg-violet-100 text-violet-700 rounded-2xl" : "text-slate-400 hover:text-violet-700")">
+                <span class="material-symbols-outlined">home</span>
+                <span class="text-[11px] font-semibold mt-1">HOME</span>
+            </a>
+
+            <a asp-controller="Student"
+               asp-action="MyBookings"
+               class="flex flex-col items-center justify-center px-5 py-2 transition @(isBookings ? "bg-violet-100 text-violet-700 rounded-2xl" : "text-slate-400 hover:text-violet-700")">
+                <span class="material-symbols-outlined">confirmation_number</span>
+                <span class="text-[11px] font-semibold mt-1">BOOKINGS</span>
+            </a>
+
+            <a asp-controller="Student"
+               asp-action="Profile"
+               class="flex flex-col items-center justify-center px-5 py-2 transition @(isProfile ? "bg-violet-100 text-violet-700 rounded-2xl" : "text-slate-400 hover:text-violet-700")">
+                <span class="material-symbols-outlined">person</span>
+                <span class="text-[11px] font-semibold mt-1">PROFILE</span>
+            </a>
+        </div>
+    </nav>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

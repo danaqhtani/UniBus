@@ -1,0 +1,318 @@
+﻿@model UniBus.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>UniBus Register</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8b5cf6",
+                        primarySoft: "#f3e8ff",
+                        background: "#faf7fb",
+                        borderSoft: "#eadcf0",
+                        textMain: "#2f2f2f"
+                    },
+                    fontFamily: {
+                        headline: ["Inter", "sans-serif"],
+                        body: ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-background font-body text-textMain">
+
+    <!-- ===========================================================
+         PAGE WRAPPER
+         Responsive:
+         - Mobile: image on top, form below
+         - Desktop: image on left, form on right
+    ============================================================ -->
+    <div class="min-h-screen flex items-center justify-center px-4 sm:px-6 py-6 sm:py-10 bg-[radial-gradient(circle_at_top_left,_rgba(236,72,153,0.10),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(139,92,246,0.12),_transparent_30%)]">
+
+        <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 bg-white rounded-[24px] sm:rounded-[32px] shadow-[0_24px_60px_rgba(0,0,0,0.08)] overflow-hidden">
+
+            <!-- =======================================================
+                 IMAGE SIDE
+                 - Mobile: shown on top with fixed height
+                 - Desktop: full left side
+                 Replace image path if filename changes
+            ======================================================== -->
+                <div class="relative h-56 sm:h-64 lg:h-auto bg-gradient-to-br from-pink-50 via-white to-violet-50 flex items-center justify-center p-6 sm:p-8 lg:p-10">
+
+                    <img src="@Url.Content("~/Content/images/register-side.jpg")"
+                         alt="UniBus Register"
+                         class="w-full max-w-[320px] sm:max-w-[380px] lg:max-w-[460px] h-auto object-contain drop-shadow-xl" />
+
+
+                    <!-- Overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent"></div>
+
+                    <!-- Text over image -->
+                    <div class="absolute bottom-5 left-5 sm:bottom-8 sm:left-8 text-white max-w-xs">
+                        <h2 class="text-3xl sm:text-4xl font-black mb-2">UniBus</h2>
+                        <p class="text-white/90 text-sm sm:text-base leading-6">
+                            SMART RIDES , BETTER JOURNEYS .
+                        </p>
+                    </div>
+                </div>
+
+                <!-- =======================================================
+         FORM SIDE
+    ======================================================== -->
+                <div class="p-6 sm:p-8 lg:p-12">
+                    <div class="max-w-md mx-auto">
+
+                        <div class="mb-8">
+                            <p class="text-sm uppercase tracking-[0.18em] text-primary mb-3 font-semibold">Student Access</p>
+                            <h2 class="font-headline text-3xl sm:text-4xl font-black text-gray-900 mb-2">Create account</h2>
+                            <p class="text-gray-500 text-sm sm:text-base">Start your campus ride journey ✨</p>
+                        </div>
+
+                        @if (ViewBag.ErrorMessage != null)
+                        {
+                            <div class="mb-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                                @ViewBag.ErrorMessage
+                            </div>
+                        }
+
+                        <form id="registerForm" method="post" action="/Account/Register" class="space-y-5">
+                            @Html.AntiForgeryToken()
+
+                            <!-- Full Name -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                                @Html.TextBoxFor(m => m.Name, new
+                                {
+                                    @class = "w-full h-14 rounded-2xl border border-borderSoft px-4 text-sm text-textMain placeholder:text-gray-400 outline-none focus:ring-4 focus:ring-purple-100 focus:border-purple-300 transition",
+                                    placeholder = "Enter your full name",
+                                    id = "nameInput",
+                                    required = "required"
+                                })
+                                <p id="nameError" class="mt-2 text-sm text-rose-600"></p>
+                            </div>
+
+                            <!-- Phone Number -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+                                @Html.TextBoxFor(m => m.PhoneNumber, new
+                                {
+                                    @class = "w-full h-14 rounded-2xl border border-borderSoft px-4 text-sm text-textMain placeholder:text-gray-400 outline-none focus:ring-4 focus:ring-purple-100 focus:border-purple-300 transition",
+                                    placeholder = "05xxxxxxxx",
+                                    id = "phoneInput",
+                                    required = "required"
+                                })
+                                <p id="phoneError" class="mt-2 text-sm text-rose-600"></p>
+                            </div>
+
+                            <!-- University Email -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">University Email</label>
+
+                                <div class="flex flex-col sm:flex-row rounded-2xl border border-borderSoft overflow-hidden focus-within:ring-4 focus-within:ring-purple-100 transition">
+                                    @Html.TextBoxFor(m => m.EmailPrefix, new
+                                    {
+                                        id = "emailInput",
+                                        placeholder = "Enter your university ID",
+                                        @class = "w-full h-14 border-none outline-none px-4 text-sm text-textMain placeholder:text-gray-400 bg-white",
+                                        required = "required"
+                                    })
+
+                                    <div class="h-14 px-4 flex items-center justify-center bg-primarySoft text-primary text-sm font-semibold border-t sm:border-t-0 sm:border-l border-borderSoft whitespace-nowrap">
+                                        @@sm.imamu.edu.sa
+                                    </div>
+                                </div>
+
+                                <p id="emailError" class="mt-2 text-sm text-rose-600"></p>
+                            </div>
+
+                            <!-- Campus Dropdown -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Campus</label>
+
+
+
+                                @Html.DropDownListFor(
+                                    m => m.BuildingId,
+                                    new SelectList(new[]
+                                    {
+                                        new { Value = "0", Text = "Select your campus" },
+                                        new { Value = "1", Text = "Faculty of Computer and Information Science and Fundamentals of Religion and Da'wah" },
+                                        new { Value = "2", Text = "Faculty of Media and Communication and Social Sciences" },
+                                        new { Value = "3", Text = "Faculty of Business and Arabic Language" },
+                                        new { Value = "4", Text = "Faculty of Languages and Translation and Medicine" },
+                                         new { Value = "5", Text = "Faculty of Sciences and Sharia" }
+                                    }, "Value", "Text"),
+                                    new
+                                    {
+                                        @class = "w-full h-14 rounded-2xl border border-borderSoft px-4 text-sm text-textMain bg-white outline-none focus:ring-4 focus:ring-purple-100 focus:border-purple-300 transition",
+                                        id = "buildingInput"
+                                    }
+                                )
+
+                                @*
+                        REAL DATABASE LATER:
+                        Replace this with campuses loaded from Building table.
+
+                        Example:
+                        @Html.DropDownListFor(
+                            m => m.BuildingId,
+                            new SelectList(Model.Campuses, "BuildingId", "BuildingName"),
+                            "Select your campus",
+                            new { @class = "..." }
+                        )
+                                *@
+
+                                <p id="buildingError" class="mt-2 text-sm text-rose-600"></p>
+                            </div>
+
+                            <!-- Password -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                                @Html.PasswordFor(m => m.Password, new
+                                {
+                                    @class = "w-full h-14 rounded-2xl border border-borderSoft px-4 text-sm text-textMain placeholder:text-gray-400 outline-none focus:ring-4 focus:ring-purple-100 focus:border-purple-300 transition",
+                                    placeholder = "Enter your password",
+                                    id = "passwordInput",
+                                    required = "required"
+                                })
+                                <p id="passwordError" class="mt-2 text-sm text-rose-600"></p>
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
+                                @Html.PasswordFor(m => m.ConfirmPassword, new
+                                {
+                                    @class = "w-full h-14 rounded-2xl border border-borderSoft px-4 text-sm text-textMain placeholder:text-gray-400 outline-none focus:ring-4 focus:ring-purple-100 focus:border-purple-300 transition",
+                                    placeholder = "Confirm your password",
+                                    id = "confirmPasswordInput",
+                                    required = "required"
+                                })
+                                <p id="confirmPasswordError" class="mt-2 text-sm text-rose-600"></p>
+                            </div>
+
+                            <!-- Submit -->
+                            <button type="submit"
+                                    id="registerBtn"
+                                    class="w-full h-14 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold text-base shadow-[0_14px_28px_rgba(236,72,153,0.18)] hover:opacity-95 active:scale-[0.99] transition">
+                                Create account
+                            </button>
+                        </form>
+
+                        <div class="mt-6 text-center text-sm text-gray-500">
+                            Already have an account?
+                            <a href="/Account/Login" class="font-semibold text-primary hover:text-fuchsia-600 transition">Sign in</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <script>
+        // ===========================================================
+        // FRONTEND VALIDATION ONLY
+        // Backend register logic stays in AccountController
+        // ===========================================================
+        const registerForm = document.getElementById("registerForm");
+        const registerBtn = document.getElementById("registerBtn");
+
+        const nameInput = document.getElementById("nameInput");
+        const phoneInput = document.getElementById("phoneInput");
+        const emailInput = document.getElementById("emailInput");
+        const buildingInput = document.getElementById("buildingInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const confirmPasswordInput = document.getElementById("confirmPasswordInput");
+
+        const nameError = document.getElementById("nameError");
+        const phoneError = document.getElementById("phoneError");
+        const emailError = document.getElementById("emailError");
+        const buildingError = document.getElementById("buildingError");
+        const passwordError = document.getElementById("passwordError");
+        const confirmPasswordError = document.getElementById("confirmPasswordError");
+
+        function resetErrors() {
+            nameError.textContent = "";
+            phoneError.textContent = "";
+            emailError.textContent = "";
+            buildingError.textContent = "";
+            passwordError.textContent = "";
+            confirmPasswordError.textContent = "";
+        }
+
+        function validateName(value) {
+            if (!value.trim()) return "Name is required";
+            return "";
+        }
+
+        function validatePhone(value) {
+            if (!value.trim()) return "Phone number is required";
+            return "";
+        }
+
+        function validateEmailPrefix(value) {
+            if (!value.trim()) return "Email is required";
+            if (value.includes("@@")) return "Write only the part before @@sm.imamu.edu.sa";
+            return "";
+        }
+
+        function validateBuilding(value) {
+            if (!value || value === "0") return "Please select your campus";
+            return "";
+        }
+
+        function validatePassword(value) {
+            if (!value.trim()) return "Password is required";
+            if (value.length < 4) return "Password must be at least 4 characters";
+            return "";
+        }
+
+        function validateConfirmPassword(password, confirmPassword) {
+            if (!confirmPassword.trim()) return "Confirm password is required";
+            if (password !== confirmPassword) return "Passwords do not match";
+            return "";
+        }
+
+        registerForm.addEventListener("submit", function (e) {
+            resetErrors();
+
+            const nameMessage = validateName(nameInput.value);
+            const phoneMessage = validatePhone(phoneInput.value);
+            const emailMessage = validateEmailPrefix(emailInput.value);
+            const buildingMessage = validateBuilding(buildingInput.value);
+            const passwordMessage = validatePassword(passwordInput.value);
+            const confirmPasswordMessage = validateConfirmPassword(passwordInput.value, confirmPasswordInput.value);
+
+            if (nameMessage || phoneMessage || emailMessage || buildingMessage || passwordMessage || confirmPasswordMessage) {
+                e.preventDefault();
+
+                if (nameMessage) nameError.textContent = nameMessage;
+                if (phoneMessage) phoneError.textContent = phoneMessage;
+                if (emailMessage) emailError.textContent = emailMessage;
+                if (buildingMessage) buildingError.textContent = buildingMessage;
+                if (passwordMessage) passwordError.textContent = passwordMessage;
+                if (confirmPasswordMessage) confirmPasswordError.textContent = confirmPasswordMessage;
+
+                return;
+            }
+
+            registerBtn.disabled = true;
+            registerBtn.textContent = "Creating account...";
+        });
+    </script>
+</body>
+</html>

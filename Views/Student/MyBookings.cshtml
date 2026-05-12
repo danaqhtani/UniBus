@@ -1,0 +1,232 @@
+﻿@model List<UniBusApp.Models.MyBookingViewModel>
+
+@{
+    ViewData["Title"] = "My Bookings";
+    var today = DateOnly.FromDateTime(DateTime.Now);
+    var nowTime = TimeOnly.FromDateTime(DateTime.Now);
+}
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#6c45af",
+                    primaryContainer: "#b78efe",
+                    secondary: "#b40953",
+                    secondaryContainer: "#ffc2ce",
+                    background: "#f6f6f8",
+                    surface: "#ffffff",
+                    surfaceLow: "#f0f1f3",
+                    surfaceHigh: "#e1e2e5",
+                    textMain: "#2d2f31",
+                    textMuted: "#5a5c5d",
+                    outline: "#757779",
+                    outlineVariant: "#acadaf"
+                },
+                borderRadius: {
+                    xl: "1.5rem",
+                    full: "9999px"
+                },
+                fontFamily: {
+                    headline: ["Manrope", "sans-serif"],
+                    body: ["Manrope", "sans-serif"],
+                    label: ["Plus Jakarta Sans", "sans-serif"]
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+
+    .primary-gradient {
+        background: linear-gradient(135deg, #6c45af 0%, #b78efe 100%);
+    }
+
+    body {
+        background-color: #f6f6f8;
+        color: #2d2f31;
+    }
+
+    .status-scheduled {
+        background-color: #f5f3ff;
+        color: #6d28d9;
+    }
+
+    .status-started {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+    }
+
+    .status-completed {
+        background-color: #ecfdf5;
+        color: #047857;
+    }
+
+    .status-cancelled {
+        background-color: #fff1f2;
+        color: #be123c;
+    }
+</style>
+
+@functions {
+    public string GetStatusClass(string? status)
+    {
+        var value = (status ?? "").Trim().ToLower();
+
+        if (value.Contains("start"))
+            return "status-started";
+
+        if (value.Contains("complete"))
+            return "status-completed";
+
+        if (value.Contains("cancel"))
+            return "status-cancelled";
+
+        return "status-scheduled";
+    }
+}
+
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-[0_12px_24px_rgba(108,69,175,0.08)]">
+    <div class="flex justify-between items-center px-6 h-16 w-full max-w-7xl mx-auto">
+        <div class="flex items-center gap-4">
+            <a asp-controller="Student" asp-action="TodayTrips" class="text-2xl font-black text-violet-700 font-headline tracking-tight">
+                UniBus
+            </a>
+        </div>
+
+        <a asp-controller="Student" asp-action="Profile" class="p-2 rounded-full hover:bg-violet-50 transition-colors cursor-pointer">
+            <span class="material-symbols-outlined text-slate-500">person</span>
+        </a>
+    </div>
+</nav>
+
+<main class="pt-24 pb-32 px-6 max-w-7xl mx-auto">
+    <header class="mb-10">
+        <h1 class="text-4xl font-extrabold font-headline tracking-tight mb-2">My Bookings</h1>
+        <p class="text-textMuted font-medium">View and manage your booked trips.</p>
+    </header>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="mb-4 rounded-xl bg-red-50 text-red-700 px-4 py-3 font-medium">
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="mb-4 rounded-xl bg-green-50 text-green-700 px-4 py-3 font-medium">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="bg-white rounded-xl p-8 border border-slate-200/60 shadow-[0_12px_24px_rgba(108,69,175,0.05)] text-center">
+            <div class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-violet-100 text-violet-700 mb-4">
+                <span class="material-symbols-outlined">event_seat</span>
+            </div>
+            <h3 class="text-xl font-bold font-headline text-slate-900 mb-2">No bookings yet</h3>
+            <p class="text-slate-500">Your booked trips will appear here.</p>
+        </div>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            @foreach (var booking in Model)
+            {
+                var canCancel =
+                booking.TripDate > today ||
+                (booking.TripDate == today && booking.DepartureTime > nowTime);
+
+                <div class="bg-white rounded-xl p-6 md:p-7 shadow-[0_12px_24px_rgba(108,69,175,0.06)] border border-slate-200/60">
+                    <div class="flex items-start justify-between gap-4 mb-5">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-widest text-violet-600 mb-2">
+                                BK-@booking.BookingId
+                            </p>
+                            <h3 class="text-xl font-bold font-headline text-slate-900">
+                                @booking.DirectionName
+                            </h3>
+                            <p class="text-slate-500 text-sm mt-1">
+                                @booking.MetroStationName
+                            </p>
+                        </div>
+
+                        <div class="bg-violet-100 p-3 rounded-2xl">
+                            <span class="material-symbols-outlined text-violet-700">directions_bus</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider @GetStatusClass(booking.BookingStatus)">
+                            @booking.BookingStatus
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-5">
+                        <div class="bg-slate-50 rounded-xl p-4">
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Departure</p>
+                            <p class="font-bold text-slate-900">@booking.DepartureTime.ToString("hh\\:mm")</p>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-xl p-4">
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Date</p>
+                            <p class="font-bold text-slate-900">@booking.TripDate.ToString("yyyy-MM-dd")</p>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-xl p-4">
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Driver</p>
+                            <p class="font-bold text-slate-900">@booking.DriverName</p>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-xl p-4">
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Trip Status</p>
+                            <p class="font-bold text-slate-900">@booking.TripStatus</p>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-xl p-4">
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Bus Plate</p>
+                            <p class="font-bold text-slate-900">@booking.BusPlate</p>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-xl p-4">
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Seats</p>
+                            <p class="font-bold text-slate-900">@booking.AvailableSeats / @booking.TotalSeats</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a asp-action="TrackTrip"
+                           asp-route-tripId="@booking.TripId"
+                           class="primary-gradient text-white font-bold font-label py-4 px-6 rounded-xl shadow-lg shadow-violet-200 active:scale-95 transition-transform w-full text-center">
+                            Track Trip
+                        </a>
+
+                        @if (canCancel)
+                        {
+                            <form asp-action="CancelBooking" method="post" class="w-full">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="bookingId" value="@booking.BookingId" />
+                                <button type="submit"
+                                        class="bg-slate-100 text-violet-700 font-bold font-label py-4 px-6 rounded-xl hover:bg-violet-100 transition-colors w-full">
+                                    Cancel Booking
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</main>

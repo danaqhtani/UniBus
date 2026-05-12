@@ -1,0 +1,255 @@
+﻿@model UniBusApp.Models.ShuttleTrip
+
+@{
+    ViewData["Title"] = "Trip Details";
+}
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#6c45af",
+                    primaryContainer: "#b78efe",
+                    secondary: "#b40953",
+                    secondaryContainer: "#ffc2ce",
+                    background: "#f6f6f8",
+                    surface: "#ffffff",
+                    surfaceLow: "#f0f1f3",
+                    surfaceHigh: "#e1e2e5",
+                    textMain: "#2d2f31",
+                    textMuted: "#5a5c5d",
+                    outline: "#757779",
+                    outlineVariant: "#acadaf"
+                },
+                borderRadius: {
+                    xl: "1.5rem",
+                    full: "9999px"
+                },
+                fontFamily: {
+                    headline: ["Manrope", "sans-serif"],
+                    body: ["Manrope", "sans-serif"],
+                    label: ["Plus Jakarta Sans", "sans-serif"]
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+
+    .primary-gradient {
+        background: linear-gradient(135deg, #6c45af 0%, #b78efe 100%);
+    }
+
+    body {
+        background-color: #f6f6f8;
+        color: #2d2f31;
+    }
+
+    .status-scheduled {
+        background-color: #f5f3ff;
+        color: #6d28d9;
+    }
+
+    .status-started {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+    }
+
+    .status-completed {
+        background-color: #ecfdf5;
+        color: #047857;
+    }
+
+    .status-default {
+        background-color: #f1f5f9;
+        color: #334155;
+    }
+</style>
+
+@functions {
+    public string GetStatusClass(string? status)
+    {
+        var value = (status ?? "").Trim().ToLower();
+
+        if (value.Contains("start"))
+            return "status-started";
+
+        if (value.Contains("complete"))
+            return "status-completed";
+
+        if (value.Contains("schedule"))
+            return "status-scheduled";
+
+        return "status-default";
+    }
+}
+
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-[0_12px_24px_rgba(108,69,175,0.08)]">
+    <div class="flex justify-between items-center px-6 h-16 w-full max-w-7xl mx-auto">
+        <div class="flex items-center gap-4">
+            <a asp-controller="Student" asp-action="TodayTrips" asp-route-direction="@Model.direction_id"
+               class="p-2 hover:bg-violet-50 transition-colors rounded-full cursor-pointer">
+                <span class="material-symbols-outlined text-slate-700">arrow_back</span>
+            </a>
+
+            <a asp-controller="Student" asp-action="TodayTrips" class="text-2xl font-black text-violet-700 font-headline tracking-tight">
+                UniBus
+            </a>
+        </div>
+
+        <a asp-controller="Student" asp-action="Profile" class="p-2 rounded-full hover:bg-violet-50 transition-colors cursor-pointer">
+            <span class="material-symbols-outlined text-slate-500">person</span>
+        </a>
+    </div>
+</nav>
+
+<main class="pt-24 pb-32 px-6 max-w-5xl mx-auto">
+    <header class="mb-10">
+        <h1 class="text-4xl font-extrabold font-headline tracking-tight mb-2">Trip Details</h1>
+        <p class="text-textMuted font-medium">Review the trip information before booking.</p>
+    </header>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="mb-4 rounded-xl bg-red-50 text-red-700 px-4 py-3 font-medium">
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="mb-4 rounded-xl bg-green-50 text-green-700 px-4 py-3 font-medium">
+            @TempData["Success"]
+        </div>
+    }
+
+    <div class="bg-white rounded-xl p-6 md:p-8 shadow-[0_12px_24px_rgba(108,69,175,0.08)] border border-slate-200/60">
+        <div class="flex items-start justify-between gap-4 mb-6">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-widest text-violet-600 mb-2">
+                    TR-@Model.trip_id
+                </p>
+                <h2 class="text-2xl font-bold font-headline text-slate-900">
+                    @(Model.Direction?.direction_name ?? "Trip")
+                </h2>
+                <p class="text-slate-500 text-sm mt-1">
+                    @(Model.Metro?.station_name ?? "Metro Station")
+                </p>
+            </div>
+
+            <div class="bg-violet-100 p-3 rounded-2xl">
+                <span class="material-symbols-outlined text-violet-700 text-3xl">directions_bus</span>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider @GetStatusClass(Model.status)">
+                @Model.status
+            </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Date</p>
+                <p class="font-bold text-slate-900">@Model.trip_date.ToString("yyyy-MM-dd")</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Departure</p>
+                <p class="font-bold text-slate-900">@Model.departure_time.ToString("hh\\:mm")</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Arrival</p>
+                <p class="font-bold text-slate-900">@Model.arrival_time.ToString("hh\\:mm")</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Seats Remaining</p>
+                <p class="font-bold text-slate-900">@Model.available_seats / @Model.total_seats</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Driver</p>
+                <p class="font-bold text-slate-900">@(Model.Driver?.driver_name ?? "Not assigned yet")</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Bus Color</p>
+                <p class="font-bold text-slate-900">@(Model.Driver?.bus_color ?? "-")</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Bus Plate</p>
+                <p class="font-bold text-slate-900">@(Model.Driver?.bus_plate ?? "-")</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Station</p>
+                <p class="font-bold text-slate-900">@(Model.Metro?.station_name ?? "-")</p>
+            </div>
+        </div>
+
+        @if (Model.TripStops != null && Model.TripStops.Any())
+        {
+            <div class="mb-6">
+                <h3 class="text-lg font-bold font-headline text-slate-900 mb-3">Stops</h3>
+                <div class="space-y-3">
+                    @foreach (var stop in Model.TripStops.OrderBy(s => s.stop_order))
+                    {
+                        <div class="bg-slate-50 rounded-xl p-4 flex items-center gap-4">
+                            <div class="h-10 w-10 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-bold">
+                                @stop.stop_order
+                            </div>
+                            <div>
+                                <p class="font-bold text-slate-900">
+                                    @(stop.Building != null ? stop.Building.building_name : "Building")
+                                </p>
+                                <p class="text-sm text-slate-500">Stop order: @stop.stop_order</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="flex flex-col sm:flex-row gap-3">
+            <form asp-action="JoinTrip" method="post" class="w-full">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="tripId" value="@Model.trip_id" />
+
+                @if (Model.available_seats > 0 && Model.status == "Scheduled")
+                {
+                    <button type="submit"
+                            class="primary-gradient text-white font-bold font-label py-4 px-6 rounded-xl shadow-lg shadow-violet-200 active:scale-95 transition-transform w-full">
+                        Book Trip
+                    </button>
+                }
+                else
+                {
+                    <button type="button"
+                            disabled
+                            class="w-full bg-slate-200 text-slate-500 font-bold font-label py-4 px-6 rounded-xl cursor-not-allowed">
+                        Not Available
+                    </button>
+                }
+            </form>
+
+            <a asp-action="TodayTrips"
+               asp-route-direction="@Model.direction_id"
+               class="bg-slate-100 text-violet-700 font-bold font-label py-4 px-6 rounded-xl hover:bg-violet-100 transition-colors w-full text-center">
+                Back to Trips
+            </a>
+        </div>
+    </div>
+</main>
