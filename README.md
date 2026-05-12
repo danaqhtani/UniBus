@@ -1,5 +1,5 @@
-# 🚌 UniBus  
-### Smart University Bus Coordination & Live Tracking System
+# UniBus
+### Smart University Bus Coordination and Live Tracking System
 
 <p align="center">
   <img src="https://img.shields.io/badge/ASP.NET%20Core-.NET%208-blue?style=for-the-badge" />
@@ -10,96 +10,105 @@
 
 ---
 
-## 🌐 Live Demo
+## Live Demo
 
-🔗 **Website:**  
+Website:  
 http://unibus.somee.com/
 
 ---
 
-# 🚀 Project Highlights
+# Overview
 
-- Real-time university bus tracking system
-- Smart route optimization algorithm
-- Dynamic ETA calculation engine
-- Google Maps & Directions API integration
-- Smooth live GPS synchronization
-- Interactive map visualization
-- ASP.NET Core MVC layered architecture
-- SQL Server database integration
-- Real-world deployment on live hosting
+UniBus is a smart transportation management system developed to improve university bus operations through intelligent routing, real-time GPS tracking, and dynamic trip management.
+
+The system minimizes unnecessary stops by dynamically optimizing routes based on active student pickup requests while providing live ETA updates and interactive tracking visualization.
 
 ---
 
-# 📖 About The Project
+# Key Features
 
-UniBus is a smart transportation management system designed to improve university bus operations through intelligent routing and real-time tracking.
-
-The system dynamically optimizes routes based on active student pickup requests, reducing unnecessary stops and improving transportation efficiency.
-
-UniBus provides:
 - Real-time bus tracking
 - Smart route optimization
-- ETA calculation
-- Interactive map visualization
-- Live driver location updates
-- Dynamic trip management
+- Dynamic ETA calculation
+- Google Maps integration
+- Live GPS synchronization
+- Student and driver portals
+- Interactive route visualization
+- ASP.NET Core MVC layered architecture
+- SQL Server database integration
+- Live deployment
 
 ---
 
-# 🖼️ System Preview
+# System Screenshots
 
-## 🔐 Login Page
+## Student Home
 
 <p align="center">
-  <img src="images/login.png" width="850"/>
+  <img src="images/student-home.png" width="320"/>
 </p>
 
 ---
 
-## 📍 Live Tracking System
+## Available Trips
 
 <p align="center">
-  <img src="images/live-tracking.png" width="850"/>
+  <img src="images/available-trips.png" width="320"/>
 </p>
 
 ---
 
-## 🚌 Driver Tracking Interface
+## My Bookings
 
 <p align="center">
-  <img src="images/driver-tracking.png" width="850"/>
+  <img src="images/my-bookings.png" width="320"/>
 </p>
 
 ---
 
-## 🛠️ Admin Dashboard
+## Live Student Tracking
 
 <p align="center">
-  <img src="images/admin-dashboard.png" width="850"/>
+  <img src="images/student-live-tracking.png" width="320"/>
 </p>
 
 ---
 
-# 🎥 Demo Preview
+## Driver Live Tracking
 
 <p align="center">
-  <img src="images/unibus-demo.gif" width="900"/>
+  <img src="images/driver-live-tracking.png" width="320"/>
 </p>
 
 ---
 
-# 🏗️ System Architecture
+## Driver Dashboard
 
 <p align="center">
-  <img src="images/system-architecture.png" width="950"/>
+  <img src="images/driver-dashboard.png" width="320"/>
 </p>
 
 ---
 
-## 🧠 Architecture Overview
+## Student Profile
 
-The project follows a layered architecture structure:
+<p align="center">
+  <img src="images/student-profile.png" width="320"/>
+</p>
+
+---
+
+# System Architecture
+
+<p align="center">
+  <img src="images/system-architecture.png" width="900"/>
+</p>
+
+---
+
+# Architecture Overview
+
+The system follows a layered architecture structure:
 
 ```text
 Presentation Layer
@@ -124,60 +133,54 @@ Database Layer
 
 ---
 
-# ✨ Features
+# Project Structure
 
-## 👨‍🎓 Student Module
-- View assigned trips
-- Track buses live on Google Maps
-- View estimated arrival time (ETA)
-- Receive real-time trip updates
-- Monitor route progress interactively
-
----
-
-## 🚌 Driver Module
-- Start and end trips
-- Share live GPS location
-- Access optimized route paths
-- Real-time navigation support
+```text
+UniBus/
+├── Controllers/
+├── Models/
+├── Services/
+├── Views/
+├── Data/
+├── wwwroot/
+├── appsettings.json
+└── Program.cs
+```
 
 ---
 
-## 🛠️ Admin Module
-- Manage buses and routes
-- Assign drivers and students
-- Monitor active trips
-- Control transportation operations
-- Manage trip scheduling
+# Smart Route Optimization
+
+UniBus uses shortest-path based optimization logic combined with Google Directions API to generate efficient transportation routes.
+
+The routing engine dynamically reorders stops based on active pickup requests to:
+- Reduce unnecessary stops
+- Minimize travel distance
+- Improve ETA accuracy
+- Optimize pickup sequencing
+
+Google Directions API is used to generate:
+- Real road paths
+- Accurate route durations
+- Smooth route polylines
+- Realistic route rendering
 
 ---
 
-# 🧠 Smart Route Optimization
+# Real-Time Tracking
 
-UniBus uses shortest-path based optimization techniques combined with Google Directions API to generate efficient transportation routes.
-
-### Optimization Goals
-✔ Reduce unnecessary stops  
-✔ Minimize travel distance  
-✔ Improve ETA accuracy  
-✔ Optimize pickup sequencing  
-
----
-
-# 📍 Real-Time Tracking System
-
-The live tracking system provides:
+The tracking system provides:
 - Continuous GPS synchronization
 - Smooth live bus movement
 - Dynamic ETA updates
 - Interactive route rendering
 - Student-specific arrival estimation
 
-Inspired by modern live delivery tracking systems.
+The live tracking experience is inspired by modern ride-tracking systems.
 
 ---
 
-# 🧰 Technologies Used
+# Technologies Used
 
 ## Backend
 - ASP.NET Core MVC
@@ -190,16 +193,16 @@ Inspired by modern live delivery tracking systems.
 - JavaScript
 - HTML5 / CSS3
 
-## APIs & Services
+## APIs and Services
 - Google Maps API
 - Google Directions API
 - Geolocation API
 
 ---
 
-# 🗄️ Database Entities
+# Database Design
 
-Main database tables include:
+Main database entities include:
 - Students
 - Drivers
 - Buses
@@ -210,9 +213,9 @@ Main database tables include:
 
 ---
 
-# ⚙️ Installation & Setup
+# Installation and Setup
 
-## 1️⃣ Clone Repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/danaqhtani/UniBus.git
@@ -220,9 +223,9 @@ git clone https://github.com/danaqhtani/UniBus.git
 
 ---
 
-## 2️⃣ Configure Database
+## Configure Database
 
-Update your connection string inside:
+Update the connection string inside:
 
 ```json
 appsettings.json
@@ -238,7 +241,7 @@ Example:
 
 ---
 
-## 3️⃣ Run Database Migration
+## Run Database Migration
 
 ```bash
 Update-Database
@@ -246,7 +249,7 @@ Update-Database
 
 ---
 
-## 4️⃣ Run Application
+## Run Application
 
 ```bash
 dotnet run
@@ -254,7 +257,7 @@ dotnet run
 
 ---
 
-# 🗺️ Google Maps Configuration
+# Google Maps Configuration
 
 Add your API key inside:
 
@@ -262,52 +265,52 @@ Add your API key inside:
 <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
 ```
 
-### Required APIs
+Required APIs:
 - Maps JavaScript API
 - Directions API
 - Geolocation API
 
 ---
 
-# 🚀 Deployment
+# Deployment
 
 UniBus is deployed using:
 - Somee Hosting
 - SQL Server Hosting
 
-### 🔗 Live Deployment
+Live Deployment:  
 http://unibus.somee.com/
 
 ---
 
-# 🔮 Future Improvements
+# Future Improvements
 
-- Push notifications
+- Push notification support
 - AI-based traffic prediction
-- Mobile application support
+- Mobile application integration
 - Attendance system integration
 - Multi-university scalability
 
 ---
 
-# 🎯 Project Goals
+# Project Goals
 
-- Improve university transportation efficiency
+- Improve transportation efficiency
 - Enhance student transportation experience
 - Reduce unnecessary route delays
 - Provide accurate real-time tracking
-- Build a scalable smart transport solution
+- Build a scalable smart transportation solution
 
 ---
 
-# 👩‍💻 Author
+# Author
 
-### Dana Saeed Al-qahtani  
+Dana Saeed Al-qahtani  
 Computer Science Student  
 Imam Mohammad Ibn Saud Islamic University
 
 ---
 
-# 📄 License
+# License
 
 This project was developed for educational and graduation project purposes.
