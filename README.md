@@ -181,32 +181,6 @@ git clone https://github.com/danaqhtani/UniBus.git
 
 ---
 
-## Configure Database
-
-Update the connection string inside:
-
-```json
-appsettings.json
-```
-
-Example:
-
-```json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=.;Database=UniBusDB;Trusted_Connection=True;TrustServerCertificate=True"
-}
-```
-
----
-
-## Run Database Migration
-
-```bash
-Update-Database
-```
-
----
-
 ## Run Application
 
 ```bash
@@ -215,20 +189,6 @@ dotnet run
 
 ---
 
-# Google Maps Configuration
-
-Add your API key inside:
-
-```html
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-```
-
-Required APIs:
-- Maps JavaScript API
-- Directions API
-- Geolocation API
-
----
 
 # Deployment
 
